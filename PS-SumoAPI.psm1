@@ -533,6 +533,115 @@ function Set-SumoApiCollectorsSource{
 
 
 
+function Remove-SumoApiCollectorsSource{
+
+    [CmdletBinding(
+    )]
+    param(
+        [parameter(
+            position = 0,
+            mandatory = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
+        )]
+        [int[]]
+        $SourceIds = $null,
+
+        [parameter(
+            position = 1,
+            mandatory = 0)]
+        [string]
+        $sourceUri = "sources",
+
+        [parameter(
+            position = 2,
+            mandatory = 1,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [int[]]
+        $CollectorIds = $null,
+
+        [parameter(
+            position = 3,
+            mandatory = 0)]
+        [string]
+        $CollectorUri = "collectors",
+
+        [parameter(
+            position = 4,
+            mandatory = 0)]
+        [string]
+        $RootUri = "https://api.sumologic.com/api/v1",
+
+        [parameter(
+            position = 5,
+            mandatory = 0)]
+        [switch]
+        $parallel,
+
+        [parameter(
+            position = 6,
+            mandatory = 1)]
+        [System.Management.Automation.PSCredential]
+        $Credential
+    )
+
+    try
+    {
+        if ($CollectorIds -eq $null)
+        {
+            Write-Warning "CollectorIDs was null. Please input."
+        }
+        else
+        {
+            if ($parallel)
+            {
+                Write-Verbose "Running Parallel execution"
+                Remove-SumoApiCollectorsParallel -RootUri $RootUri -CollectorUri $CollectorUri -CollectorIds $CollectorIds -credential $Credential
+            }
+            else
+            {
+                foreach ($CollectorId in $CollectorIds)
+                {
+                    $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId
+                    Write-Warning -Message "Posting Delete Collector Request to $uri"
+                    Invoke-RestMethod -Uri $uri -Method Delete -Credential $Credential -ErrorAction Stop
+                }
+            }
+        }
+
+        if (($CollectorIds -eq $null) -and ($SourceIds -ne $null))
+        {
+            Write-Warning "CollectorIds[$CollectorIds] or SourceIds[$SourceIds] contains null. Please input value."
+        }
+        else
+        {
+            if ($parallel)
+            {
+                Write-Verbose "Running Parallel execution"
+                Remove-SumoLogicCollectorsSourceParallel -RootUri $RootUri -CollectorUri $CollectorUri -CollectorIds $CollectorIds -SourceIds $SourceIds -sourceUri $sourceUri -credential $Credential
+            }
+            else
+            {
+                foreach ($CollectorId in $CollectorIds)
+                {
+                    foreach ($SourceId in $SourceIds)
+                    {
+                        $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId + "/" + $SourceUri + "/" + $SourceId
+                        Write-Warning -Message "Sending Get source Request to $uri"
+                        $Source = Invoke-RestMethod -Method Delete -Uri $uri -Credential $Credential -ErrorAction Stop
+                        $Source.source
+                    }
+                }
+            }
+        }
+    }
+    catch
+    {
+        throw $_
+    }
+}
+
 #-- workflow for parallel execution --#
 
 workflow Get-SumoLogicCollectorsSourceParallel{
@@ -634,6 +743,45 @@ workflow Set-SumoLogicCollectorsSourceParallel{
             Write-Warning -Message "Sending set source POST Request to $uri"
             $source = Invoke-RestMethod -Method Post -Uri $uri -Credential $using:Credential -ContentType "application/json" -Body $using:json -ErrorAction Stop
             $source.source
+        }
+    }
+}
+
+
+workflow Remove-SumoLogicCollectorsSourceParallel{
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            Mandatory = 1,
+            Position = 0)]
+        [int[]]
+        $CollectorIds,
+
+        [parameter(
+            Mandatory = 1,
+            Position = 1)]
+        [int[]]
+        $SourceIds,
+        
+        [parameter(
+            Mandatory = 1,
+            Position = 2)]
+        [System.Management.Automation.PSCredential]
+        $credential
+    )
+
+    foreach -Parallel ($collectorId in $CollectorIds)
+    {
+        inlinescript
+        {
+            foreach ($sourceid in $using:SourceIds)
+            {
+                $sourceuri = "https://api.sumologic.com/api/v1/collectors/$using:CollectorId/sources/$sourceid"
+                $source = Invoke-RestMethod -Method Delete -Uri $sourceiduri -Credential $using:Credential -ErrorAction Stop
+                Write-Warning -Message "Show Delete source Request to $sourceuri"
+                $source.source
+            }
         }
     }
 }
