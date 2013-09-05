@@ -1,5 +1,9 @@
 ﻿#Requires -Version 3.0
 
+#-- sumologic api cmdlet --#
+
+# # -- Credential cmdlets -- # #
+
 function New-SumoCredential{
 
     [CmdletBinding()]
@@ -47,7 +51,7 @@ function New-SumoCredential{
         
         if (Test-Path $CredPath)
         {
-            Write-Verbose "Remove existing Credential Password for $User found in $CredPath"
+            Write-Verbose -Message "Remove existing Credential Password for $User found in $CredPath"
             Remove-Item -Path $CredPath -Force -Confirm
         }
 
@@ -56,7 +60,7 @@ function New-SumoCredential{
         $savePass | Set-Content -Path $CredPath -Force
 
 
-        Write-Verbose "Completed: Credential Password for $User had been sat in $CredPath"
+        Write-Verbose -Message "Completed: Credential Password for $User had been sat in $CredPath"
     }
     else
     {
@@ -122,6 +126,9 @@ function Get-SumoCredential{
 }
 
 
+
+# # -- Collector cmdlets -- # #
+
 function Get-SumoApiCollectors{
 
     [CmdletBinding(
@@ -133,7 +140,7 @@ function Get-SumoApiCollectors{
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [string[]]
+        [int[]]
         $CollectorIds = $null,
 
         [parameter(
@@ -161,7 +168,7 @@ function Get-SumoApiCollectors{
         {
             $uri = $RootUri + "/" + $CollectorUri
 
-            $Collectors = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential
+            $Collectors = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential -ErrorAction Stop
             $Collectors.collectors
         }
         else
@@ -169,7 +176,8 @@ function Get-SumoApiCollectors{
             foreach ($CollectorId in $CollectorIds)
             {
                 $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId
-                $Collectors = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential
+                Write-Warning -Message "Sending Get Collector Request to $uri"
+                $Collectors = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential -ErrorAction Stop
                 $Collectors.Collector
             }
         }
@@ -192,7 +200,7 @@ function Remove-SumoApiCollectors{
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [string[]]
+        [int[]]
         $CollectorIds,
 
         [parameter(
@@ -215,6 +223,12 @@ function Remove-SumoApiCollectors{
 
         [parameter(
             position = 4,
+            mandatory = 0)]
+        [switch]
+        $parallel,
+
+        [parameter(
+            position = 5,
             mandatory = 1)]
         [System.Management.Automation.PSCredential]
         $Credential
@@ -228,11 +242,19 @@ function Remove-SumoApiCollectors{
         }
         else
         {
-            foreach ($CollectorId in $CollectorIds)
+            if ($parallel)
             {
-                $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId
-                Write-Host "Posting Delete Request to $uri"
-                Invoke-RestMethod -Uri $uri -Method Delete -Credential $Credential
+                Write-Verbose "Running Parallel execution"
+                Remove-SumoApiCollectorsParallel -RootUri $RootUri -CollectorUri $CollectorUri -CollectorIds $CollectorIds -credential $Credential
+            }
+            else
+            {
+                foreach ($CollectorId in $CollectorIds)
+                {
+                    $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId
+                    Write-Warning -Message "Posting Delete Collector Request to $uri"
+                    Invoke-RestMethod -Uri $uri -Method Delete -Credential $Credential -ErrorAction Stop
+                }
             }
         }
     }
@@ -243,6 +265,50 @@ function Remove-SumoApiCollectors{
 }
 
 
+#-- workflow for parallel execution --#
+
+workflow Remove-SumoApiCollectorsParallel{
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            Mandatory = 1,
+            Position = 0)]
+        [string]
+        $RootUri,
+
+        [parameter(
+            Mandatory = 1,
+            Position = 1)]
+        [string]
+        $CollectorUri,
+
+        [parameter(
+            Mandatory = 1,
+            Position = 2)]
+        [int[]]
+        $CollectorIds,
+        
+        [parameter(
+            Mandatory = 1,
+            Position = 3)]
+        [System.Management.Automation.PSCredential]
+        $credential
+    )
+
+    foreach -Parallel ($collectorId in $CollectorIds)
+    {
+        inlinescript
+        {
+            $uri = $using:RootUri + "/" + $using:CollectorUri + "/" + $using:CollectorId
+            Write-Warning -Message "Posting Delete Collector Request to $uri"
+            Invoke-RestMethod -Uri $uri -Method Delete -Credential $using:Credential -ErrorAction Stop
+        }
+    }
+}
+
+
+# # -- Source cmdlets -- # #
 
 function Get-SumoApiCollectorsSource{
 
@@ -255,7 +321,7 @@ function Get-SumoApiCollectorsSource{
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [string[]]
+        [int[]]
         $SourceIds = $null,
 
         [parameter(
@@ -269,7 +335,7 @@ function Get-SumoApiCollectorsSource{
             mandatory = 1,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
-        [string[]]
+        [int[]]
         $CollectorIds = $null,
 
         [parameter(
@@ -286,6 +352,12 @@ function Get-SumoApiCollectorsSource{
 
         [parameter(
             position = 5,
+            mandatory = 0)]
+        [switch]
+        $parallel,
+
+        [parameter(
+            position = 6,
             mandatory = 1)]
         [System.Management.Automation.PSCredential]
         $Credential
@@ -295,25 +367,161 @@ function Get-SumoApiCollectorsSource{
     {
         if ($CollectorIds -ne $null)
         {
+            if ($parallel)
+            {
+                Write-Verbose "Running Parallel execution"
+                Get-SumoLogicCollectorsSourceParallel -RootUri $RootUri -CollectorUri $CollectorUri -CollectorIds $CollectorIds -SourceIds $SourceIds -sourceUri $sourceUri -credential $Credential
+            }
+            else
+            {
+                foreach ($CollectorId in $CollectorIds)
+                {
+                    if ($null -eq $SourceIds)
+                    {
+                        $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId + "/" + $SourceUri
+                        Write-Warning -Message "Sending Get source Request to $uri"
+                        $Sources = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential -ErrorAction Stop
+                        $Sources.sources
+                    }
+                    else
+                    {
+                        foreach ($SourceId in $SourceIds)
+                        {
+                            $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId + "/" + $SourceUri + "/" + $SourceId
+                            Write-Warning -Message "Sending Get source Request to $uri"
+                            $Source = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential -ErrorAction Stop
+                            $Source.source
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    catch
+    {
+        throw $_
+    }
+}
+
+
+function Set-SumoApiCollectorsSource{
+
+    [CmdletBinding(
+    )]
+    param(
+        [parameter(
+            position = 0,
+            mandatory = 1,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true)]
+        [int[]]
+        $CollectorIds = $null,
+
+        [parameter(
+            position = 1,
+            mandatory = 1)]
+        [string]
+        $pathExpression,
+
+        [parameter(
+            position = 2,
+            mandatory = 1)]
+        [string]
+        $name,
+
+        [parameter(
+            position = 3,
+            mandatory = 1)]
+        [validateset("LocalFile","RemoteFile","LocalWindowsEventLog","RemoteWindowsEventLog","Syslog","Script","Alert","AmazonS3","HTTP")]
+        [string]
+        $sourceType,
+
+        [parameter(
+            position = 4,
+            mandatory = 1)]
+        [string]
+        $category,
+
+        [parameter(
+            position = 5,
+            mandatory = 1)]
+        [string]
+        $description,
+
+        [parameter(
+            position = 6,
+            mandatory = 0)]
+        [bool]
+        $alive = $true,
+
+        [parameter(
+            position = 7,
+            mandatory = 0)]
+        [string]
+        $states = "",
+
+        [parameter(
+            position = 8,
+            mandatory = 0)]
+        [bool]
+        $automaticDateParsing = $true,
+
+        [parameter(
+            position = 9,
+            mandatory = 0)]
+        [string]
+        $timeZone = "Asia/Tokyo",
+
+        [parameter(
+            position = 10,
+            mandatory = 0)]
+        [bool]
+        $multilineProcessingEnabled = $true,
+
+        [parameter(
+            position = 11,
+            mandatory = 0)]
+        [switch]
+        $parallel,
+
+        [parameter(
+            position = 12,
+            mandatory = 1)]
+        [System.Management.Automation.PSCredential]
+        $Credential
+    )
+
+    try
+    {
+        $json = @{ 
+            source = @{ 
+                pathExpression = $pathExpression
+                name = $name
+                sourceType = $sourceType
+                category = $category
+                description = $description
+                alive = $alive
+                states = $states
+                automaticDateParsing = $automaticDateParsing
+                timeZone = $timeZone
+                multilineProcessingEnabled = $multilineProcessingEnabled
+            }
+        } | ConvertTo-Json
+
+        if ($parallel)
+        {
+            Write-Verbose -Message "Running Parallel execution"
+            Set-SumoLogicCollectorsSourceParallel -CollectorIds $CollectorIds -credential $Credential -json $json
+        }
+        else
+        {
             foreach ($CollectorId in $CollectorIds)
             {
-                
-
-                if ($SourceIds -eq $null)
-                {
-                    $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId + "/" + $SourceUri
-                    $Sources = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential
-                }
-                else
-                {
-                    foreach ($SourceId in $SourceIds)
-                    {
-                        $uri = $RootUri + "/" + $CollectorUri + "/" + $CollectorId + "/" + $SourceUri + "/" + $SourceId
-                        $Sources = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential
-                    }
-                }
-
-                $Sources.sources
+                $uri = "https://api.sumologic.com/api/v1/collectors/$CollectorId/sources/"
+                Write-Warning -Message "Sending set source POST Request to $uri"
+                $source = Invoke-RestMethod -Method Post -Uri $uri -Credential $credential -ContentType "application/json" -Body $json -ErrorAction Stop
+                $source.source
             }
         }
     }
@@ -325,6 +533,110 @@ function Get-SumoApiCollectorsSource{
 
 
 
+#-- workflow for parallel execution --#
+
+workflow Get-SumoLogicCollectorsSourceParallel{
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            position = 0,
+            mandatory = 0)]
+        [int[]]
+        $SourceIds,
+
+        [parameter(
+            position = 1,
+            mandatory = 0)]
+        [string]
+        $SourceUri,
+
+        [parameter(
+            position = 2,
+            mandatory = 1)]
+        [int[]]
+        $CollectorIds,
+
+        [parameter(
+            position = 3,
+            mandatory = 0)]
+        [string]
+        $CollectorUri,
+
+        [parameter(
+            position = 4,
+            mandatory = 0)]
+        [string]
+        $RootUri,
+        
+        [parameter(
+            Mandatory = 1,
+            Position = 4)]
+        [System.Management.Automation.PSCredential]
+        $credential
+    )
+
+    foreach -Parallel ($collectorId in $CollectorIds)
+    {
+        inlinescript{
+            if ($null -eq $using:SourceIds)
+            {
+                $sourceuri = $using:RootUri + "/" + $using:CollectorUri + "/" + $using:CollectorId + "/" + $using:SourceUri
+                $sources = Invoke-RestMethod -Method Get -Uri $sourceuri -Credential $using:Credential -ErrorAction Stop
+                Write-Warning -Message "Show Get source Request to $sourceuri"
+                $sources.sources
+            }
+            else
+            {
+                foreach ($SourceId in $using:SourceIds)
+                {
+                    $sourceiduri = $using:RootUri + "/" + $using:CollectorUri + "/" + $using:CollectorId + "/" + $using:SourceUri + "/" + $using:SourceId
+                    $source = Invoke-RestMethod -Method Get -Uri $sourceiduri -Credential $using:Credential -ErrorAction Stop
+                    Write-Warning -Message "Show Get source Request to $sourceuri"
+                    $source.source
+                }
+            }
+        }
+    }
+}
+
+
+
+workflow Set-SumoLogicCollectorsSourceParallel{
+
+    [CmdletBinding()]
+    param(
+        [parameter(
+            Mandatory = 1,
+            Position = 0)]
+        [int[]]
+        $CollectorIds,
+        
+        [parameter(
+            Mandatory = 1,
+            Position = 1)]
+        [System.Management.Automation.PSCredential]
+        $credential,
+
+        [parameter(
+            Mandatory = 1,
+            Position = 2)]
+        [string]
+        $json
+
+    )
+
+    foreach -Parallel ($collectorId in $CollectorIds)
+    {
+        inlinescript
+        {
+            $uri = "https://api.sumologic.com/api/v1/collectors/$using:CollectorId/sources/"
+            Write-Warning -Message "Sending set source POST Request to $uri"
+            $source = Invoke-RestMethod -Method Post -Uri $uri -Credential $using:Credential -ContentType "application/json" -Body $using:json -ErrorAction Stop
+            $source.source
+        }
+    }
+}
 
 
 #-- Export Modules when loading this module --#
