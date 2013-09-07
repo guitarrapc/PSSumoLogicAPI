@@ -27,6 +27,8 @@ Function    Set-SumoLogicCollectorsSource    PS-SumoLogicAPI
 
 # Sample
 
+You can find sample source in (sample)[https://github.com/guitarrapc/PS-SumoLogicAPI/tree/master/Sample]
+
 ## Credential
 
 ### Create Credential secure Password File
