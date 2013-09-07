@@ -4,7 +4,7 @@
 
 # # -- Credential cmdlets -- # #
 
-function New-SumoCredential{
+function New-SumoLogicCredential{
 
     [CmdletBinding()]
     param(
@@ -71,7 +71,7 @@ function New-SumoCredential{
 }
 
 
-function Get-SumoCredential{
+function Get-SumoLogicCredential{
 
     [CmdletBinding()]
     param(
@@ -112,12 +112,12 @@ function Get-SumoCredential{
         }
         else
         {
-            Write-Host "Credential already created, skip Get-SumoCredential" -ForegroundColor Cyan
+            Write-Host "Credential already created, skip Get-SumoLogicCredential" -ForegroundColor Cyan
         }
     }
     else
     {
-        throw "Credential not created yet. Please run New-SumoCredential to obtain credential."
+        throw "Credential not created yet. Please run New-SumoLogicCredential to obtain credential."
     }
 
 
@@ -129,7 +129,7 @@ function Get-SumoCredential{
 
 # # -- Collector cmdlets -- # #
 
-function Get-SumoApiCollectors{
+function Get-SumoLogicCollectors{
 
     [CmdletBinding(
     )]
@@ -190,7 +190,7 @@ function Get-SumoApiCollectors{
 }
 
 
-function Remove-SumoApiCollectors{
+function Remove-SumoLogicCollectors{
 
     [CmdletBinding(
     )]
@@ -245,7 +245,7 @@ function Remove-SumoApiCollectors{
             if ($parallel)
             {
                 Write-Verbose "Running Parallel execution"
-                Remove-SumoApiCollectorsParallel -RootUri $RootUri -CollectorUri $CollectorUri -CollectorIds $CollectorIds -credential $Credential
+                Remove-SumoLogicCollectorsParallel -RootUri $RootUri -CollectorUri $CollectorUri -CollectorIds $CollectorIds -credential $Credential
             }
             else
             {
@@ -267,7 +267,7 @@ function Remove-SumoApiCollectors{
 
 #-- workflow for parallel execution --#
 
-workflow Remove-SumoApiCollectorsParallel{
+workflow Remove-SumoLogicCollectorsParallel{
 
     [CmdletBinding()]
     param(
@@ -310,7 +310,7 @@ workflow Remove-SumoApiCollectorsParallel{
 
 # # -- Source cmdlets -- # #
 
-function Get-SumoApiCollectorsSource{
+function Get-SumoLogicCollectorsSource{
 
     [CmdletBinding(
     )]
@@ -405,7 +405,7 @@ function Get-SumoApiCollectorsSource{
 }
 
 
-function Set-SumoApiCollectorsSource{
+function Set-SumoLogicCollectorsSource{
 
     [CmdletBinding(
     )]
@@ -533,7 +533,7 @@ function Set-SumoApiCollectorsSource{
 
 
 
-function Remove-SumoApiCollectorsSource{
+function Remove-SumoLogicCollectorsSource{
 
     [CmdletBinding(
     )]
