@@ -785,5 +785,12 @@ workflow Remove-SumoLogicCollectorsSourceParallel{
 #-- Export Modules when loading this module --#
 
 Export-ModuleMember `
-    -Function * `
+    -Function Get-SumoLogicCollectors,
+        Get-SumoLogicCollectorsSource,
+        Get-SumoLogicCredential,
+        New-SumoLogicCredential,
+        Remove-SumoLogicCollectors,
+        Remove-SumoLogicCollectorsSource,
+        Set-SumoLogicCollectorsSource `
+    -Variable * `
     -Alias * 
