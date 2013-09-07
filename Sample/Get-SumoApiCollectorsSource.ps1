@@ -1,4 +1,7 @@
-﻿$user ="Input UserName"
+﻿# define
+$user = "hoge@hoge.com"
+
+# Get Credential
 $credential = Get-SumoCredential -User $user -force
 
 
@@ -15,16 +18,12 @@ else
     Write-Host "Using existing colletors. skip Get-SumoApiCollectors." -ForegroundColor Cyan
 }
 
-
-
-
-# Show Sources 
-
-#(Invoke-RestMethod -Method Get -Uri "https://api.sumologic.com/api/v1/collectors/3502547/sources/" -Credential $credential -ContentType "application/json").sources
-
 # All
 Get-SumoApiCollectorsSource -CollectorIds $collectors.Id -Credential $credential
 
-# Selected
-#Get-SumoApiCollectorsSource -CollectorIds $($collectors | where Id -eq 3434151).Id
+# Parallel
+Get-SumoApiCollectorsSource  -Credential $credential -CollectorIds $Collectors.id -parallel
+
+# Selected collector
+Get-SumoApiCollectorsSource -CollectorIds $($collectors | where Id -eq 3434151).Id -Credential $credential
 

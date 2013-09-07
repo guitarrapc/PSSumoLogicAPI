@@ -1,6 +1,8 @@
-﻿$user ="Input UserName"
-$credential = Get-SumoCredential -User $user -force
+﻿# define
+$user = "hoge@hoge.com"
 
+# Get Credential
+$credential = Get-SumoCredential -User $user -force
 
 # Obtain Collectors
 if (($collectors.Length -ne $null) -and ($(Read-Host "Do you want to get new collectors? (y/n)") -eq "y"))
@@ -16,9 +18,14 @@ else
 }
 
 
+# Remove Collectors
+Remove-SumoApiCollectors -CollectorIds $Collectors.CollectorIds -Credential $credential
+
+# Remove Collectors parallel
+Remove-SumoApiCollectors -CollectorIds $stoppedCollectors.CollectorIds -parallel -Credential $credential
+
 
 # Delete Stopped state Collectors
-
 Write-Host "Display not alive Collectors" -ForegroundColor Cyan
 $stoppedCollectors = $Collectors | %{
     [PSCustomObject]@{
