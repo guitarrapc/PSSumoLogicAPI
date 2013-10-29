@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Ps-sumologicapi : PowerShell SumoLogic API Management Module" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Ps-sumologicapi</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/guitarrapc/PS-SumoLogicAPI">View on GitHub</a>
+
+          <h1 id="project_title">Ps-sumologicapi</h1>
+          <h2 id="project_tagline">PowerShell SumoLogic API Management Module</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/guitarrapc/PS-SumoLogicAPI/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/guitarrapc/PS-SumoLogicAPI/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="ps-sumologicapi" class="anchor" href="#ps-sumologicapi"><span class="octicon octicon-link"></span></a>PS-SumoLogicAPI</h1>
+
+<p>SumoLogic Collector management API Modules.</p>
+
+<h1>
+<a name="sumologic-collector-management-api" class="anchor" href="#sumologic-collector-management-api"><span class="octicon octicon-link"></span></a>SumoLogic Collector Management API</h1>
+
+<p>See here.</p>
+
+<p><a href="https://github.com/SumoLogic/sumo-api-doc/wiki/collector-management-api">SumoLogic/sumo-api-doc</a></p>
+
+<h1>
+<a name="cmdlets" class="anchor" href="#cmdlets"><span class="octicon octicon-link"></span></a>Cmdlets</h1>
+
+<p>Here's Cmdlets use in public</p>
+
+<div class="highlight highlight-text"><pre>CommandType Name                             ModuleName     
+----------- ----                             ----------     
+Function    Get-SumoLogicCollectors          PS-SumoLogicAPI
+Function    Get-SumoLogicCollectorsSource    PS-SumoLogicAPI
+Function    Get-SumoLogicCredential          PS-SumoLogicAPI
+Function    New-SumoLogicCredential          PS-SumoLogicAPI
+Function    Remove-SumoLogicCollectors       PS-SumoLogicAPI
+Function    Remove-SumoLogicCollectorsSource PS-SumoLogicAPI
+Function    Set-SumoLogicCollectorsSource    PS-SumoLogicAPI
+</pre></div>
+
+<h1>
+<a name="sample" class="anchor" href="#sample"><span class="octicon octicon-link"></span></a>Sample</h1>
+
+<p>You can find sample source in (sample)[<a href="https://github.com/guitarrapc/PS-SumoLogicAPI/tree/master/Sample">https://github.com/guitarrapc/PS-SumoLogicAPI/tree/master/Sample</a>]</p>
+
+<h2>
+<a name="credential" class="anchor" href="#credential"><span class="octicon octicon-link"></span></a>Credential</h2>
+
+<h3>
+<a name="create-credential-secure-password-file" class="anchor" href="#create-credential-secure-password-file"><span class="octicon octicon-link"></span></a>Create Credential secure Password File</h3>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">New-SumoLogicCredential</span> <span class="n">-user</span> <span class="n">hoge</span><span class="nv">@hoge</span><span class="p">.</span><span class="n">com</span>
+</pre></div>
+
+<h3>
+<a name="get-credential-secure-password-from-file" class="anchor" href="#get-credential-secure-password-from-file"><span class="octicon octicon-link"></span></a>Get Credential secure Password from file</h3>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-SumoLogicCredential</span> <span class="n">-user</span> <span class="n">hoge</span><span class="nv">@hoge</span><span class="p">.</span><span class="n">com</span>
+</pre></div>
+
+<p>you can reuse Credential.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-SumoLogicCredential</span> <span class="n">-user</span> <span class="n">hoge</span><span class="nv">@hoge</span><span class="p">.</span><span class="n">com</span>
+</pre></div>
+
+<h2>
+<a name="collector" class="anchor" href="#collector"><span class="octicon octicon-link"></span></a>Collector</h2>
+
+<h3>
+<a name="get-sumologic-collectors-of-your-account" class="anchor" href="#get-sumologic-collectors-of-your-account"><span class="octicon octicon-link"></span></a>Get SumoLogic Collectors of your account</h3>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-SumoLogicCollectors</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+</pre></div>
+
+<p>specify collector id</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-SumoLogicCollectors</span> <span class="n">-CollectorIds</span> <span class="s2">"CollectorId"</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+</pre></div>
+
+<p>You can reuse collectors.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$Collectors</span> <span class="p">=</span> <span class="nb">Get-SumoLogicCollectors</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+</pre></div>
+
+<h3>
+<a name="remove-collectors" class="anchor" href="#remove-collectors"><span class="octicon octicon-link"></span></a>Remove Collectors</h3>
+
+<p>Specify Collector id to remove collectors</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Remove-SumoLogicCollectors</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+</pre></div>
+
+<p>you can run as parallel for collectors by adding -parallel switch. (using workflow 5 parallel)</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Remove-SumoLogicCollectors</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-parallel</span>
+</pre></div>
+
+<h2>
+<a name="source" class="anchor" href="#source"><span class="octicon octicon-link"></span></a>Source</h2>
+
+<h3>
+<a name="get-sumologic-source-for-collectors-of-your-account" class="anchor" href="#get-sumologic-source-for-collectors-of-your-account"><span class="octicon octicon-link"></span></a>Get SumoLogic Source for Collectors of your account</h3>
+
+<p>Get all collectors source</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-SumoLogicCollectorsSource</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-parallel</span> <span class="p">|</span> <span class="n">ft</span>
+</pre></div>
+
+<p>Get Specific Collectors source</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-SumoLogicCollectorsSource</span> <span class="n">-CollectorIds</span> <span class="s2">"collector id"</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+</pre></div>
+
+<p>Using  to specify source name</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-SumoLogicCollectorsSource</span> <span class="n">-CollectorIds</span> <span class="s2">"collector id"</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="p">|</span> <span class="n">where</span> <span class="n">name</span> <span class="o">-eq</span> <span class="s2">"test"</span>
+</pre></div>
+
+<h3>
+<a name="set-sumologic-source-for-collectors-of-your-account" class="anchor" href="#set-sumologic-source-for-collectors-of-your-account"><span class="octicon octicon-link"></span></a>Set SumoLogic Source for Collectors of your account</h3>
+
+<p>You can set for each Source Type, will show in intellisence.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Set-SumoLogicCollectorsSource</span> <span class="n">-CollectorIds</span> <span class="s2">"Collector id"</span> <span class="n">-pathExpression</span> <span class="s2">"Path to Log"</span> <span class="n">-name</span> <span class="s2">"Source name"</span> <span class="n">-sourceType</span> <span class="s2">"Select from intellisence"</span> <span class="n">-category</span> <span class="s2">"category name"</span> <span class="n">-description</span> <span class="s2">"description"</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+</pre></div>
+
+<p>you can run as parallel for sources by adding -parallel switch. (using workflow 5 parallel)</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Set-SumoLogicCollectorsSource</span> <span class="n">-CollectorIds</span> <span class="s2">"Collector id"</span> <span class="n">-pathExpression</span> <span class="s2">"Path to Log"</span> <span class="n">-name</span> <span class="s2">"Source name"</span> <span class="n">-sourceType</span> <span class="s2">"Select from intellisence"</span> <span class="n">-category</span> <span class="s2">"category name"</span> <span class="n">-description</span> <span class="s2">"description"</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-parallel</span>
+</pre></div>
+
+<h3>
+<a name="remove-source" class="anchor" href="#remove-source"><span class="octicon octicon-link"></span></a>Remove Source</h3>
+
+<p>Specify Collector id to remove Source</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nb">Remove-SumoLogicCollectorsSource</span> <span class="n">-CollectorId</span> <span class="n">4105438</span> <span class="n">-SourceIds</span> <span class="p">$(</span><span class="nb">Get-SumoLogicCollectorsSource</span> <span class="n">-CollectorIds</span> <span class="n">4105438</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="p">|</span> <span class="n">where</span> <span class="n">name</span> <span class="o">-eq</span> <span class="s2">"test"</span><span class="p">).</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-parallel</span>
+</pre></div>
+
+<p>Or foreach collectors for specific source name.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$collectors</span> <span class="p">|</span> <span class="p">%{</span>
+    <span class="nv">$sourceids</span> <span class="p">=</span> <span class="nb">Get-SumoLogicCollectorsSource</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="p">|</span> <span class="n">where</span> <span class="n">name</span> <span class="o">-like</span> <span class="s2">"$sourcename*"</span>
+    <span class="nb">Remove-SumoLogicCollectorsSource</span> <span class="n">-SourceIds</span> <span class="nv">$sourceids</span><span class="p">.</span><span class="n">id</span> <span class="n">-CollectorId</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-parallel</span>
+<span class="p">}</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Ps-sumologicapi maintained by <a href="https://github.com/guitarrapc">guitarrapc</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
