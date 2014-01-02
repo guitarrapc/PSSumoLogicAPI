@@ -1,4 +1,4 @@
-PS-SumoLogicAPI
+PSSumoLogicAPI
 ==========
 
 SumoLogic Collector management API Modules.
