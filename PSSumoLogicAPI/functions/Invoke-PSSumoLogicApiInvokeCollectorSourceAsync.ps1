@@ -2,7 +2,7 @@
 
 # # -- Source cmdlets -- # #
 
-function Invoke-SumoLogicInvokeCollectorSourceAsync
+function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
 {
 
     [CmdletBinding()]
@@ -82,10 +82,9 @@ function Invoke-SumoLogicInvokeCollectorSourceAsync
         }
         
         # check process result
-        # check process result
-        if(Test-IsSumoLogicCollectorAsyncStatusCompleted -PowerShellAsyncResult $runspaceCollection.RunSpace)
+        if(Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted -PowerShellAsyncResult $runspaceCollection.RunSpace)
         {
-            Get-SumoLogicCollectorAsyncResult -RunspaceCollection $runspaceCollection
+            Get-PSSumoLogicApiCollectorAsyncResult -RunspaceCollection $runspaceCollection
         }
     }
     finally

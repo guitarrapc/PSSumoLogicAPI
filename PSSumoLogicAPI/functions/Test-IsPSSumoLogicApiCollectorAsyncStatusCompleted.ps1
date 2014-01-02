@@ -2,7 +2,7 @@
 
 # # -- Async cmdlets -- # #
 
-function Test-IsSumoLogicCollectorAsyncStatusCompleted
+function Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted
 {
 
     [CmdletBinding()]

@@ -14,39 +14,71 @@ See here.
 Here's Cmdlets use in public
 
 ```text
-CommandType Name                             ModuleName     
------------ ----                             ----------     
-Function    Get-SumoLogicCollectors          PS-SumoLogicAPI
-Function    Get-SumoLogicCollectorsSource    PS-SumoLogicAPI
-Function    Get-SumoLogicCredential          PS-SumoLogicAPI
-Function    New-SumoLogicCredential          PS-SumoLogicAPI
-Function    Remove-SumoLogicCollectors       PS-SumoLogicAPI
-Function    Remove-SumoLogicCollectorsSource PS-SumoLogicAPI
-Function    Set-SumoLogicCollectorsSource    PS-SumoLogicAPI
+CommandType Name                                               ModuleName    
+----------- ----                                               ----------    
+Function    Get-PSSumoLogicApiCollectorAsyncResult             PSSumoLogicAPI
+Function    Get-PSSumoLogicApiCollectors                       PSSumoLogicAPI
+Function    Get-PSSumoLogicApiCollectorSource                  PSSumoLogicAPI
+Function    Get-PSSumoLogicApiCredential                       PSSumoLogicAPI
+Function    Invoke-PSSumoLogicApiInvokeCollectorAsync          PSSumoLogicAPI
+Function    Invoke-PSSumoLogicApiInvokeCollectorSourceAsync    PSSumoLogicAPI
+Function    New-PSSumoLogicApiCredential                       PSSumoLogicAPI
+Function    New-PSSumoLogicApiRunSpacePool                     PSSumoLogicAPI
+Function    Remove-PSSumoLogicApiCollectors                    PSSumoLogicAPI
+Function    Remove-PSSumoLogicApiCollectorsAsync               PSSumoLogicAPI
+Function    Set-PSSumoLogicApiCollectorSource                  PSSumoLogicAPI
+Function    Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted PSSumoLogicAPI
 ```
 
-# Sample
+# Test
 
-You can find sample source in (sample)[https://github.com/guitarrapc/PS-SumoLogicAPI/tree/master/Sample]
+You can find sample source in (Test)[https://github.com/guitarrapc/PS-SumoLogicAPI/tree/master/Test]
 
 ## Credential
 
 ### Create Credential secure Password File
 
 ```PowerShell
-New-SumoLogicCredential -user hoge@hoge.com
+Get-PSSumoLogicApiCredential -user hoge@hoge.com
 ```
+
+if you configure ```.\PSSumoLogicAPI\config\PSSumoLogicAPI-config.ps1``` as to input username, 
+
+```PowerShell
+$PSSumoLogicAPI.credential = @{
+    user                        = "INPUT YOUR API KEY HERE"
+}
+
+#change it like
+
+$PSSumoLogicAPI.credential = @{
+    user                        = "hoge@hoge.com"
+}
+
+```
+you can omit -user parameter, as default use ```$PSSumoLogicAPI.credential.user```, in this case hoge@hoge.com
+
+```PowerShell
+Get-PSSumoLogicApiCredential
+```
+
 
 ### Get Credential secure Password from file
 
 ```PowerShell
-Get-SumoLogicCredential -user hoge@hoge.com
+Get-PSSumoLogicApiCredential -user hoge@hoge.com
+```
+
+you can omit username if you configure ```.\PSSumoLogicAPI\config\PSSumoLogicAPI-config.ps1```
+
+```PowerShell
+Get-PSSumoLogicApiCredential
 ```
 
 you can reuse Credential.
 
 ```PowerShell
-$credential = Get-SumoLogicCredential -user hoge@hoge.com
+$credential = Get-PSSumoLogicApiCredential
 ```
 
 
@@ -55,29 +87,39 @@ $credential = Get-SumoLogicCredential -user hoge@hoge.com
 ### Get SumoLogic Collectors of your account
 
 ```PowerShell
-Get-SumoLogicCollectors -Credential $credential
-```
-
-specify collector id
-```PowerShell
-Get-SumoLogicCollectors -CollectorIds "CollectorId" -Credential $credential
+Get-PSSumoLogicApiCollectors -Credential $credential
 ```
 
 You can reuse collectors.
 
 ```PowerShell
-$Collectors = Get-SumoLogicCollectors -Credential $credential
+$Collectors = Get-PSSumoLogicApiCollectors -Credential $credential
 ```
+
+specify collector ids.
+```PowerShell
+Get-PSSumoLogicApiCollectors -Credential $credential -CollectorIds "collectorId"
+```
+
+for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+
+```PowerShell
+Get-PSSumoLogicApiCollectors -Credential $credential -CollectorIds "collectorId" -Async
+```
+
+it will speed up about x5 then not using switch.
 
 ### Remove Collectors
 
 Specify Collector id to remove collectors
+
 ```PowerShell
-Remove-SumoLogicCollectors -CollectorIds $Collectors.id -Credential $credential
+Remove-PSSumoLogicApiCollectors -CollectorIds $Collectors.id -Credential $credential
 ```
+
 you can run as parallel for collectors by adding -parallel switch. (using workflow 5 parallel)
 ```PowerShell
-Remove-SumoLogicCollectors -CollectorIds $Collectors.id -Credential $credential -parallel
+Remove-PSSumoLogicApiCollectors -CollectorIds $Collectors.id -Credential $credential -Async
 ```
 
 ## Source
@@ -86,41 +128,73 @@ Remove-SumoLogicCollectors -CollectorIds $Collectors.id -Credential $credential 
 
 Get all collectors source
 ```PowerShell
-Get-SumoLogicCollectorsSource -CollectorIds $Collectors.id -Credential $credential -parallel | ft
+# Get Credential
+$credential = Get-PSSumoLogicApiCredential
+
+# Obtain Collectors
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+$collectors = Get-PSSumoLogicApiCollectors -Credential $credential
+
+# Obtain Source
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorIds $collectors.id
 ```
 
-Get Specific Collectors source
+Get First 4 Collectors source
+
 ```PowerShell
-Get-SumoLogicCollectorsSource -CollectorIds "collector id" -Credential $credential
+# Get Credential
+$credential = Get-PSSumoLogicApiCredential
+
+# Obtain Collectors
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+$collectors = Get-PSSumoLogicApiCollectors -Credential $credential | select -First 4
+
+# Obtain Source
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorIds $collectors.id
 ```
 
-Using <where> to specify source name
+Asynchronouse execution will speed up
+
 ```PowerShell
-Get-SumoLogicCollectorsSource -CollectorIds "collector id" -Credential $credential | where name -eq "test"
+# Get Credential
+$credential = Get-PSSumoLogicApiCredential
+
+# Obtain Collectors
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+$collectors = Get-PSSumoLogicApiCollectors -Credential $credential
+
+# Obtain Source
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorIds $collectors.id -Async
 ```
+
 ### Set SumoLogic Source for Collectors of your account
 
 You can set for each Source Type, will show in intellisence.
 ```PowerShell
-Set-SumoLogicCollectorsSource -CollectorIds "Collector id" -pathExpression "Path to Log" -name "Source name" -sourceType "Select from intellisence" -category "category name" -description "description" -Credential $credential
+$credential = Get-PSSumoLogicApiCredential
+
+# Obtain Collectors
+$collectors = Get-PSSumoLogicApiCollectors -Credential $credential | Select -First 2
+
+# Set Sources
+,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -CollectorIds $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential}
 ```
 
-you can run as parallel for sources by adding -parallel switch. (using workflow 5 parallel)
+Asynchronouse execution will speed up
+
 ```PowerShell
-Set-SumoLogicCollectorsSource -CollectorIds "Collector id" -pathExpression "Path to Log" -name "Source name" -sourceType "Select from intellisence" -category "category name" -description "description" -Credential $credential -parallel
+$credential = Get-PSSumoLogicApiCredential
+
+# Obtain Collectors
+$collectors = Get-PSSumoLogicApiCollectors -Credential $credential | Select -First 2
+
+# Set Sources
+,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -CollectorIds $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential -Async}
 ```
 
 ### Remove Source
 
-Specify Collector id to remove Source
-```PowerShell
-Remove-SumoLogicCollectorsSource -CollectorId 4105438 -SourceIds $(Get-SumoLogicCollectorsSource -CollectorIds 4105438 -Credential $credential | where name -eq "test").id -Credential $credential -parallel
-```
-
-Or foreach collectors for specific source name.
-```PowerShell
-$collectors | %{
-    $sourceids = Get-SumoLogicCollectorsSource -Credential $credential -CollectorIds $_.id | where name -like "$sourcename*"
-    Remove-SumoLogicCollectorsSource -SourceIds $sourceids.id -CollectorId $_.id -Credential $credential -parallel
-}
-```
+Will be create.

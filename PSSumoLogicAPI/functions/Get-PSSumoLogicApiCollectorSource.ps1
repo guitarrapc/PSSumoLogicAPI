@@ -2,7 +2,7 @@
 
 # # -- Source cmdlets -- # #
 
-function Get-SumoLogicApiCollectorsSource
+function Get-PSSumoLogicApiCollectorSource
 {
     [CmdletBinding(
     )]
@@ -59,7 +59,7 @@ function Get-SumoLogicApiCollectorsSource
                     $result
                 }
                                 
-                Invoke-SumoLogicInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
+                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
             }
             else
             {
@@ -80,7 +80,7 @@ function Get-SumoLogicApiCollectorsSource
                     $result
                 }
 
-                Invoke-SumoLogicInvokeCollectorSourceAsync -Command $command -CollectorIds $CollectorIds -SourceIds $SourceIds -credential $Credential
+                Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorIds $CollectorIds -SourceIds $SourceIds -credential $Credential
             }
         }
         else

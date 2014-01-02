@@ -55,7 +55,7 @@ function Remove-PSSumoLogicApiCollectors
             }
                                 
             Write-Verbose -Message "Posting Delete Collector Request to $uri"
-            Invoke-SumoLogicInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
+            Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
         }
         else
         {

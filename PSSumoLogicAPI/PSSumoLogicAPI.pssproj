@@ -31,16 +31,10 @@
     <Content Include="config\PSSumoLogicAPI-config.ps1" />
     <Content Include="functions\Get-PSSumoLogicApiCollectors.ps1" />
     <Content Include="functions\Get-PSSumoLogicApiCredential.ps1" />
-    <Content Include="functions\Get-SumoLogicApiCollectorAsyncResult.ps1" />
-    <Content Include="functions\Get-SumoLogicApiCollectorsSource.ps1" />
-    <Content Include="functions\Invoke-SumoLogicApiInvokeCollectorAsync.ps1" />
-    <Content Include="functions\Invoke-SumoLogicApiInvokeCollectorSourceAsync.ps1" />
     <Content Include="functions\New-PSSumoLogicApiCredential.ps1" />
     <Content Include="functions\New-PSSumoLogicApiRunSpacePool.ps1" />
     <Content Include="functions\Remove-PSSumoLogicApiCollectors.ps1" />
     <Content Include="functions\Remove-PSSumoLogicApiCollectorsAsync.ps1" />
-    <Content Include="functions\Set-SumoLogicApiCollectorSource.ps1" />
-    <Content Include="functions\Test-IsSumoLogicApiCollectorAsyncStatusCompleted.ps1" />
     <Content Include="grani\Sample\Get-SumoLogicApiCollectorsOSGroup.ps1" />
     <Content Include="grani\Sample\Get-SumoLogicApiCollectorsSource.ps1" />
     <Content Include="grani\Sample\New-SumoLogicCredential.ps1" />
@@ -70,6 +64,12 @@
     <Folder Include="Sample\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="functions\Get-PSSumoLogicApiCollectorAsyncResult.ps1" />
+    <Compile Include="functions\Get-PSSumoLogicApiCollectorSource.ps1" />
+    <Compile Include="functions\Invoke-PSSumoLogicApiInvokeCollectorAsync.ps1" />
+    <Compile Include="functions\Invoke-PSSumoLogicApiInvokeCollectorSourceAsync.ps1" />
+    <Compile Include="functions\Set-PSSumoLogicApiCollectorSource.ps1" />
+    <Compile Include="functions\Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted.ps1" />
     <Compile Include="PSSumoLogicAPI.psd1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

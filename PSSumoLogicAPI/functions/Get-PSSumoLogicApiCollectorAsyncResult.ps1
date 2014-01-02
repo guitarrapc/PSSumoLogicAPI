@@ -2,7 +2,7 @@
 
 # # -- Async cmdlets -- # #
 
-function Get-SumoLogicApiCollectorAsyncResult
+function Get-PSSumoLogicApiCollectorAsyncResult
 {
 
     [CmdletBinding()]

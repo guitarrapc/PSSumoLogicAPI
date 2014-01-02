@@ -62,7 +62,7 @@ function Get-PSSumoLogicApiCollectors
                 }
                                 
                 Write-Verbose -Message "Sending Get Collector Rquest to $uri"
-                Invoke-SumoLogicInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
+                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
             }
             else
             {
