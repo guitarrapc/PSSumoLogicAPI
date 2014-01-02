@@ -39,7 +39,7 @@ You can find sample source in [Test](https://github.com/guitarrapc/PSSumoLogicAP
 ### Create Credential secure Password File
 
 ```PowerShell
-Get-PSSumoLogicApiCredential -user hoge@hoge.com
+New-PSSumoLogicApiCredential -user hoge@hoge.com
 ```
 
 if you configure ```.\PSSumoLogicAPI\config\PSSumoLogicAPI-config.ps1``` as to input username, 
@@ -59,11 +59,13 @@ $PSSumoLogicAPI.credential = @{
 you can omit -user parameter, as default use ```$PSSumoLogicAPI.credential.user```, in this case hoge@hoge.com
 
 ```PowerShell
-Get-PSSumoLogicApiCredential
+New-PSSumoLogicApiCredential
 ```
 
 
 ### Get Credential secure Password from file
+
+Onece you create credential, you can get it easily.
 
 ```PowerShell
 Get-PSSumoLogicApiCredential -user hoge@hoge.com
