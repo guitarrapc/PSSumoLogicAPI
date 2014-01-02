@@ -119,7 +119,7 @@ Specify Collector id to remove collectors
 Remove-PSSumoLogicApiCollectors -CollectorIds $Collectors.id -Credential $credential
 ```
 
-you can run as parallel for collectors by adding -parallel switch. (using workflow 5 parallel)
+Asynchronouse execution will speed up
 ```PowerShell
 Remove-PSSumoLogicApiCollectors -CollectorIds $Collectors.id -Credential $credential -Async
 ```
