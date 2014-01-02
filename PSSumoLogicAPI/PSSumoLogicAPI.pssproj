@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>6CAFC0C6-A428-4d30-A9F9-700E829FEA51</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>
+    <Name>PSSumoLogicAPI</Name>
+    <ProjectHome />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="config\PSSumoLogicAPI-config.ps1" />
+    <Content Include="functions\Get-PSSumoLogicApiCollectors.ps1" />
+    <Content Include="functions\Get-PSSumoLogicApiCredential.ps1" />
+    <Content Include="functions\Get-SumoLogicApiCollectorAsyncResult.ps1" />
+    <Content Include="functions\Get-SumoLogicApiCollectorsSource.ps1" />
+    <Content Include="functions\Invoke-SumoLogicApiInvokeCollectorAsync.ps1" />
+    <Content Include="functions\Invoke-SumoLogicApiInvokeCollectorSourceAsync.ps1" />
+    <Content Include="functions\New-PSSumoLogicApiCredential.ps1" />
+    <Content Include="functions\New-PSSumoLogicApiRunSpacePool.ps1" />
+    <Content Include="functions\Remove-PSSumoLogicApiCollectors.ps1" />
+    <Content Include="functions\Remove-PSSumoLogicApiCollectorsAsync.ps1" />
+    <Content Include="functions\Set-SumoLogicApiCollectorSource.ps1" />
+    <Content Include="functions\Test-IsSumoLogicApiCollectorAsyncStatusCompleted.ps1" />
+    <Content Include="grani\Sample\Get-SumoLogicApiCollectorsOSGroup.ps1" />
+    <Content Include="grani\Sample\Get-SumoLogicApiCollectorsSource.ps1" />
+    <Content Include="grani\Sample\New-SumoLogicCredential.ps1" />
+    <Content Include="grani\Sample\Remove-SumoLogicApiSource.ps1" />
+    <Content Include="grani\Sample\Remove-SumoApiCollectorsStoppedCollector.ps1" />
+    <Content Include="grani\Set-Source_Http_Redis_RedisCounter_Response_Sql_White.ps1" />
+    <Content Include="grani\Set-Source_Login_ThreadInfo.ps1" />
+    <Content Include="grani\Set-Source_Login_ThreadInfo_RedisCounter_White_IISError.ps1" />
+    <Content Include="grani\Set-Source_White10-0-0-10-Http_Redis_RedisCounter_Response_Sql_White_IIS.ps1" />
+    <Content Include="install.bat" />
+    <Content Include="install.ps1" />
+    <Content Include="New-PSSumoLogicAPIManufest.ps1" />
+    <Content Include="PSSumoLogicAPI.psm1" />
+    <Content Include="Sample\Test-GetSumoApiCollectorsAsync.ps1" />
+    <Content Include="Sample\Test-GetSumoApiCollectors.ps1" />
+    <Content Include="Sample\Get-SumoApiCollectorsSource.ps1" />
+    <Content Include="Sample\New-SumoCredential.ps1" />
+    <Content Include="Sample\Remove-SumoCollectors.ps1" />
+    <Content Include="Sample\Remove-SumoCollectorsSource.ps1" />
+    <Content Include="Sample\Test-SetSumoLogicApiCollectorSource.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="config\" />
+    <Folder Include="functions\" />
+    <Folder Include="grani\" />
+    <Folder Include="grani\Sample\" />
+    <Folder Include="Sample\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PSSumoLogicAPI.psd1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>
