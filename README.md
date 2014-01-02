@@ -32,7 +32,7 @@ Function    Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted PSSumoLogicAPI
 
 # Test
 
-You can find sample source in [Test](https://github.com/guitarrapc/PS-SumoLogicAPI/tree/master/Test)
+You can find sample source in [Test](https://github.com/guitarrapc/PSSumoLogicAPI/tree/master/PSSumoLogicAPI/Test)
 
 ## Credential
 
