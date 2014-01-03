@@ -46,13 +46,13 @@ if you configure ```.\PSSumoLogicAPI\config\PSSumoLogicAPI-config.ps1``` as to i
 
 ```PowerShell
 $PSSumoLogicAPI.credential = @{
-    user                        = "INPUT YOUR API KEY HERE"
+    user                           = "INPUT YOUR Email Address to logon"
 }
 
 #change it like
 
 $PSSumoLogicAPI.credential = @{
-    user                        = "hoge@hoge.com"
+    user                           = "hoge@hoge.com"
 }
 
 ```
