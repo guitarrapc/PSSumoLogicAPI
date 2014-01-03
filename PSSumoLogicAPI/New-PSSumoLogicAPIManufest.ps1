@@ -1,5 +1,5 @@
 ﻿$script:module = "PSSumoLogicAPI"
-$script:moduleVersion = "0.0.1"
+$script:moduleVersion = "1.0.0"
 $script:description = "PowerShell SumoLogic API Caller";
 $script:copyright = "06/Dec/2013 -"
 $script:RequiredModules = @()
