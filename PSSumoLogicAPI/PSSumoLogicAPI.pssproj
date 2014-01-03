@@ -29,7 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="config\PSSumoLogicAPI-config.ps1" />
-    <Content Include="functions\Get-PSSumoLogicApiCollectors.ps1" />
+    <Content Include="functions\Get-PSSumoLogicApiCollector.ps1" />
     <Content Include="functions\Get-PSSumoLogicApiCredential.ps1" />
     <Content Include="functions\New-PSSumoLogicApiCredential.ps1" />
     <Content Include="functions\New-PSSumoLogicApiRunSpacePool.ps1" />

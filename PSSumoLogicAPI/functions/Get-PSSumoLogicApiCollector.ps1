@@ -2,7 +2,7 @@
 
 # # -- Collector cmdlets -- # #
 
-function Get-PSSumoLogicApiCollectors
+function Get-PSSumoLogicApiCollector
 {
 
     [CmdletBinding()]

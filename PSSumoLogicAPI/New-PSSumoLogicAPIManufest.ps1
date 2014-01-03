@@ -7,7 +7,7 @@ $script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1
 
 $script:functionToExport = @(
     "Get-PSSumoLogicApiCollectorAsyncResult"
-    ,"Get-PSSumoLogicApiCollectors"
+    ,"Get-PSSumoLogicApiCollector"
     ,"Get-PSSumoLogicApiCollectorSource"
     ,"Get-PSSumoLogicApiCredential"
     ,"Invoke-PSSumoLogicApiInvokeCollectorAsync"
