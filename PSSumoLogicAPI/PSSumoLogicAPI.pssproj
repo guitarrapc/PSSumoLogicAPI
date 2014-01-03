@@ -34,16 +34,6 @@
     <Content Include="functions\New-PSSumoLogicApiCredential.ps1" />
     <Content Include="functions\New-PSSumoLogicApiRunSpacePool.ps1" />
     <Content Include="functions\Remove-PSSumoLogicApiCollectors.ps1" />
-    <Content Include="functions\Remove-PSSumoLogicApiCollectorsAsync.ps1" />
-    <Content Include="grani\Sample\Get-SumoLogicApiCollectorsOSGroup.ps1" />
-    <Content Include="grani\Sample\Get-SumoLogicApiCollectorsSource.ps1" />
-    <Content Include="grani\Sample\New-SumoLogicCredential.ps1" />
-    <Content Include="grani\Sample\Remove-SumoLogicApiSource.ps1" />
-    <Content Include="grani\Sample\Remove-SumoApiCollectorsStoppedCollector.ps1" />
-    <Content Include="grani\Set-Source_Http_Redis_RedisCounter_Response_Sql_White.ps1" />
-    <Content Include="grani\Set-Source_Login_ThreadInfo.ps1" />
-    <Content Include="grani\Set-Source_Login_ThreadInfo_RedisCounter_White_IISError.ps1" />
-    <Content Include="grani\Set-Source_White10-0-0-10-Http_Redis_RedisCounter_Response_Sql_White_IIS.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
     <Content Include="New-PSSumoLogicAPIManufest.ps1" />
@@ -59,8 +49,6 @@
   <ItemGroup>
     <Folder Include="config\" />
     <Folder Include="functions\" />
-    <Folder Include="grani\" />
-    <Folder Include="grani\Sample\" />
     <Folder Include="Sample\" />
   </ItemGroup>
   <ItemGroup>

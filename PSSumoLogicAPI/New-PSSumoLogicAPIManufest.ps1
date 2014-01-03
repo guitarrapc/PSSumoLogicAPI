@@ -6,18 +6,17 @@ $script:RequiredModules = @()
 $script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1008" or "4.0.30319.1" , "4.0.30319.17929" (Win8/2012)
 
 $script:functionToExport = @(
-    "Get-PSSumoLogicApiCollectorAsyncResult"
-    ,"Get-PSSumoLogicApiCollector"
-    ,"Get-PSSumoLogicApiCollectorSource"
-    ,"Get-PSSumoLogicApiCredential"
-    ,"Invoke-PSSumoLogicApiInvokeCollectorAsync"
-    ,"Invoke-PSSumoLogicApiInvokeCollectorSourceAsync"
-    ,"New-PSSumoLogicApiCredential"
-    ,"New-PSSumoLogicApiRunSpacePool"
-    ,"Remove-PSSumoLogicApiCollectors"
-    ,"Remove-PSSumoLogicApiCollectorsAsync"
-    ,"Set-PSSumoLogicApiCollectorSource"
-    ,"Test-PSSumoLogicApiCollectorAsyncStatusCompleted"
+    "Get-PSSumoLogicApiCollectorAsyncResult",
+    "Get-PSSumoLogicApiCollector",
+    "Get-PSSumoLogicApiCollectorSource",
+    "Get-PSSumoLogicApiCredential",
+    "Invoke-PSSumoLogicApiInvokeCollectorAsync",
+    "Invoke-PSSumoLogicApiInvokeCollectorSourceAsync",
+    "New-PSSumoLogicApiCredential",
+    "New-PSSumoLogicApiRunSpacePool",
+    "Remove-PSSumoLogicApiCollectors",
+    "Set-PSSumoLogicApiCollectorSource",
+    "Test-PSSumoLogicApiCollectorAsyncStatusCompleted"
 )
 
 $script:variableToExport = "PSSumoLogicAPI"
