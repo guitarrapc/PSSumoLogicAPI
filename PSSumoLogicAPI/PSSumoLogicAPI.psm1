@@ -86,19 +86,19 @@ $PSSumoLogicAPI.uri = @{
     sourceId                       = [uri]"api.sumologic.com/api/v1/collectors/{0}/sources/{1}"
 }
 
+#-- Public Loading Module Parameters (Recommend to use ($PSSumoLogicAPI.defaultconfigurationfile) for customization) --#
+
+# credential
+$PSSumoLogicAPI.credential = @{
+    user                           = "INPUT YOUR Email Address to logon"
+}
+
 $PSSumoLogicAPI.sourceParameter    = @{
     alive                          = [bool]$true
     states                         = [string]""
     automaticDateParsing           = [bool]$true
     timeZone                       = [string]"Asia/Tokyo"
     multilineProcessingEnabled     = [bool]$true
-}
-
-#-- Public Loading Module Parameters (Recommend to use ($PSSumoLogicAPI.defaultconfigurationfile) for customization) --#
-
-# credential
-$PSSumoLogicAPI.credential = @{
-    user                           = "INPUT YOUR Email Address to logon"
 }
 
 # RunSpace Pool size
