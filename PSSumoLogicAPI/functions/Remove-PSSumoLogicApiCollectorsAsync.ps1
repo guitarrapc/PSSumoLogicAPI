@@ -44,7 +44,6 @@ function Remove-PSSumoLogicApiCollectorsAsync
             }
 
             # Main Invokation
-
             # create sctiptblock Static
             Write-Debug "start asynchronous invokation"
             $private:powershell = [PowerShell]::Create().
@@ -66,24 +65,9 @@ function Remove-PSSumoLogicApiCollectorsAsync
         }
         
         # check process result
-        if(Test-SumoLogicCollectorAsyncStatus -PowerShellAsyncResult $runspaceCollection.RunSpace)
+        if(Test-PSSumoLogicApiCollectorAsyncStatusCompleted -PowerShellAsyncResult $runspaceCollection.RunSpace)
         {
-        
-            # get process result and end powershell session
-            Write-Debug "obtain process result"
-            foreach ($runspace in $runspaceCollection)
-            {
-                # obtain Asynchronos command result
-                $private:task = $runspace.powershell.EndInvoke($runspace.Runspace)
-            
-                $property = ($task | Get-Member -MemberType NoteProperty).Name
-            
-                # show result
-                $task.$property
-            
-                # Dispose pipeline
-                $runspace.powershell.Dispose()
-            }
+            Get-PSSumoLogicApiCollectorAsyncResult -RunspaceCollection $runspaceCollection
         }
     }
     finally

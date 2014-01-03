@@ -58,7 +58,6 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
                 }
 
                 # Main Invokation
-
                 # create sctiptblock Static
                 Write-Debug "start asynchronous invokation"
                 $private:powershell = [PowerShell]::Create().
