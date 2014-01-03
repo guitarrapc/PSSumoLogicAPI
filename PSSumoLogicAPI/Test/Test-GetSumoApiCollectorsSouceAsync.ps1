@@ -3,7 +3,7 @@ $credential = Get-PSSumoLogicApiCredential
 
 # Obtain Collectors
 $host.Ui.WriteVerboseLine("Running Synchronize request")
-$collectors = Get-PSSumoLogicApiCollectors -Credential $credential
+$collectors = Get-PSSumoLogicApiCollector -Credential $credential
 
 # Obtain Source
 $host.Ui.WriteVerboseLine("Running Synchronize request")
