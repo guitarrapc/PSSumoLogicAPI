@@ -2,7 +2,7 @@
 
 # # -- Collector cmdlets -- # #
 
-function Remove-PSSumoLogicApiCollectors
+function Remove-PSSumoLogicApiCollector
 {
 
     [CmdletBinding()]
