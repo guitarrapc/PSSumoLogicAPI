@@ -30,18 +30,19 @@
   <ItemGroup>
     <Content Include="config\PSSumoLogicAPI-config.ps1" />
     <Content Include="functions\Get-PSSumoLogicApiCollector.ps1" />
+    <Content Include="functions\Remove-PSSumoLogicApiCollectorSource.ps1" />
     <Content Include="functions\Get-PSSumoLogicApiCredential.ps1" />
     <Content Include="functions\New-PSSumoLogicApiCredential.ps1" />
     <Content Include="functions\New-PSSumoLogicApiRunSpacePool.ps1" />
-    <Content Include="functions\Remove-PSSumoLogicApiCollectors.ps1" />
+    <Content Include="functions\Remove-PSSumoLogicApiCollector.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
     <Content Include="New-PSSumoLogicAPIManufest.ps1" />
     <Content Include="PSSumoLogicAPI.psm1" />
-    <Content Include="Test\Test-GetSumoApiCollectors.ps1" />
-    <Content Include="Test\Test-GetSumoApiCollectorsAsync.ps1" />
-    <Content Include="Test\Test-GetSumoApiCollectorsSouce.ps1" />
-    <Content Include="Test\Test-GetSumoApiCollectorsSouceAsync.ps1" />
+    <Content Include="Test\Test-GetSumoApiCollector.ps1" />
+    <Content Include="Test\Test-GetSumoApiCollectorAsync.ps1" />
+    <Content Include="Test\Test-GetSumoApiCollectorSouce.ps1" />
+    <Content Include="Test\Test-GetSumoApiCollectorSouceAsync.ps1" />
     <Content Include="Test\Test-NewPSSumoLogicApiCredential.ps1" />
     <Content Include="Test\Test-RemovePSSumoLogicApiCollector.ps1" />
     <Content Include="Test\Test-RemovePSSumoLogicApiCollectorsAsync.ps1" />

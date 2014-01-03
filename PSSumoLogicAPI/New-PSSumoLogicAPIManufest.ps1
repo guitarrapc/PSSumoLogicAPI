@@ -14,7 +14,8 @@ $script:functionToExport = @(
     "Invoke-PSSumoLogicApiInvokeCollectorSourceAsync",
     "New-PSSumoLogicApiCredential",
     "New-PSSumoLogicApiRunSpacePool",
-    "Remove-PSSumoLogicApiCollectors",
+    "Remove-PSSumoLogicApiCollector",
+    "Remove-PSSumoLogicApiCollectorSource",
     "Set-PSSumoLogicApiCollectorSource",
     "Test-PSSumoLogicApiCollectorAsyncStatusCompleted"
 )
