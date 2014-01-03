@@ -82,7 +82,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         }
         
         # check process result
-        if(Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted -PowerShellAsyncResult $runspaceCollection.RunSpace)
+        if(Test-PSSumoLogicApiCollectorAsyncStatusCompleted -PowerShellAsyncResult $runspaceCollection.RunSpace)
         {
             Get-PSSumoLogicApiCollectorAsyncResult -RunspaceCollection $runspaceCollection
         }

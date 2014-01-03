@@ -17,7 +17,7 @@ $script:functionToExport = @(
     ,"Remove-PSSumoLogicApiCollectors"
     ,"Remove-PSSumoLogicApiCollectorsAsync"
     ,"Set-PSSumoLogicApiCollectorSource"
-    ,"Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted"
+    ,"Test-PSSumoLogicApiCollectorAsyncStatusCompleted"
 )
 
 $script:variableToExport = "PSSumoLogicAPI"

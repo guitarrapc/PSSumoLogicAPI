@@ -69,7 +69,7 @@
     <Compile Include="functions\Invoke-PSSumoLogicApiInvokeCollectorAsync.ps1" />
     <Compile Include="functions\Invoke-PSSumoLogicApiInvokeCollectorSourceAsync.ps1" />
     <Compile Include="functions\Set-PSSumoLogicApiCollectorSource.ps1" />
-    <Compile Include="functions\Test-IsPSSumoLogicApiCollectorAsyncStatusCompleted.ps1" />
+    <Compile Include="functions\Test-PSSumoLogicApiCollectorAsyncStatusCompleted.ps1" />
     <Compile Include="PSSumoLogicAPI.psd1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
