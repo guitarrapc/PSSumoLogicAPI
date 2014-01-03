@@ -31,6 +31,10 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
 
     try
     {
+        # create run space and open
+        $runSpacePool = New-PSSumoLogicApiRunSpacePool
+        $runSpacePool.Open()
+
         foreach ($CollectorId in $CollectorIds)
         {
             # Verbose settings for Async Command inside
@@ -69,8 +73,6 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             }
 
             # execute ScriptBlock
-            $runSpacePool = New-PSSumoLogicApiRunSpacePool
-            $runSpacePool.Open()
             $powershell.RunspacePool = $runspacePool
             
             [array]$private:RunspaceCollection += New-Object -TypeName PSObject -Property @{
