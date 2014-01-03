@@ -98,7 +98,7 @@ $PSSumoLogicAPI.sourceParameter    = @{
 
 # credential
 $PSSumoLogicAPI.credential = @{
-    user                        = "INPUT YOUR API KEY HERE"
+    user                           = "INPUT YOUR Email Address to logon"
 }
 
 # RunSpace Pool size
