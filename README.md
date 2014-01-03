@@ -5,9 +5,9 @@ PSSumoLogicApi will help you manage SumoLogic Collector management automation.
 
 Unfortunately there are no management for bulk collectors on Web UI of SumoLogic. Therefore API is needed to manage hundred of collectors, sources.
 
-This module is in use in production and ease me all time adding new server or change configuration of SumoLogic:)
+This module is in use of production and ease me all time adding new server or change configuration of SumoLogic:)
 
-Have a fun with SumoLogic! Windows Powershell will help your Windows life.
+Have a fun with SumoLogic! Windows Powershell will help your Windows life!
 
 # SumoLogic Collector Management API
 
