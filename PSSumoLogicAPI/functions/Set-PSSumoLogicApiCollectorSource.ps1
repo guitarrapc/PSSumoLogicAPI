@@ -124,7 +124,7 @@ function Set-PSSumoLogicApiCollectorSource
 
                 $VerbosePreference = $verbose
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source-f $CollectorId))).uri
-                Write-Verbose -Message "Sending Get source Request to $uri"
+                Write-Verbose -Message ("Sending Get source Request to {0}" -f $uri)
                 Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -Credential $Credential -Body $json
             }
                                 
@@ -135,7 +135,7 @@ function Set-PSSumoLogicApiCollectorSource
             foreach ($CollectorId in $CollectorIds)
             {
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
-                Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
+                Write-Verbose -Message ("Posting Get Source for all Collectors Request to {0}" -f $uri)
                 (Invoke-RestMethod -Uri $uri  -Method Post -Headers $PSSumoLogicApi.contentType -Credential $Credential -Body $json).source
             }
         }

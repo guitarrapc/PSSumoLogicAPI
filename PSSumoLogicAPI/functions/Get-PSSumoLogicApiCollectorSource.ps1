@@ -4,9 +4,9 @@
 
 function Get-PSSumoLogicApiCollectorSource
 {
-    [CmdletBinding(
-    )]
-    param(
+    [CmdletBinding()]
+    param
+    (
         [parameter(
             position = 0,
             mandatory = 0,
@@ -18,7 +18,9 @@ function Get-PSSumoLogicApiCollectorSource
 
         [parameter(
             position = 1,
-            mandatory = 0)]
+            mandatory = 0,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName)]
         [int[]]
         $SourceIds = $null,
 
@@ -54,7 +56,7 @@ function Get-PSSumoLogicApiCollectorSource
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
-                    Write-Verbose -Message "Sending Get source Request to $uri"
+                    Write-Verbose -Message ("Sending Get source Request to {0}" -f $uri)
                     Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
                 }
                                 
@@ -74,7 +76,7 @@ function Get-PSSumoLogicApiCollectorSource
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $CollectorId, $SourceId))).uri
-                    Write-Verbose -Message "Sending Get source Request to $uri"
+                    Write-Verbose -Message ("Sending Get source Request to {0}" -f $uri)
                     Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
                 }
 
@@ -88,16 +90,15 @@ function Get-PSSumoLogicApiCollectorSource
                 if ($null -eq $SourceIds)
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
-                    Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
+                    Write-Verbose -Message ("Posting Get Source for all Collectors Request to {0}" -f $uri)
                     (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).sources
-                    
                 }
                 else
                 {
                     foreach ($SourceId in $SourceIds)
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $CollectorId, $SourceId))).uri
-                        Write-Verbose -Message "Posting Get Source for specific Collector, souce Request to $uri"
+                        Write-Verbose -Message ("Posting Get Source for specific Collector, souce Request to {0}" -f $uri)
                         (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).source
                     }
                 }

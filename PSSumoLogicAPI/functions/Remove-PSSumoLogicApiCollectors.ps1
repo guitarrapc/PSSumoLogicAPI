@@ -49,7 +49,7 @@ function Remove-PSSumoLogicApiCollectors
 
                 $VerbosePreference = $verbose
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId -f $CollectorId))).uri
-                Write-Verbose -Message "Sending Get source Request to $uri"
+                Write-Verbose -Message ("Sending Get source Request to {0}" -f $uri)
                 Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
             }
                                 
@@ -61,7 +61,7 @@ function Remove-PSSumoLogicApiCollectors
             foreach ($CollectorId in $CollectorIds)
             {
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId-f $CollectorId))).uri
-                Write-Verbose -Message "Posting Delete Collector Request to $uri"
+                Write-Verbose -Message ("Posting Delete Collector Request to {0}" -f $uri)
                 Invoke-RestMethod -Uri $uri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
             }
         }
