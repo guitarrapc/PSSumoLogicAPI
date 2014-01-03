@@ -131,7 +131,7 @@ function Set-PSSumoLogicApiCollectorSource
                                 
             Invoke-SumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential -Body $json
         }
-        else
+        else # not Async Invokation
         {
             foreach ($CollectorId in $CollectorIds)
             {

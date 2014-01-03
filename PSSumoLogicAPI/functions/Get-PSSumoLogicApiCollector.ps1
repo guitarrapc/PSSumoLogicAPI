@@ -64,7 +64,7 @@ function Get-PSSumoLogicApiCollector
                 Write-Verbose -Message "Sending Get Collector Rquest to $uri"
                 Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
             }
-            else
+            else # not Async Invokation
             {
                 foreach ($CollectorId in $CollectorIds)
                 {

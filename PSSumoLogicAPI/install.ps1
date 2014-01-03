@@ -104,7 +104,7 @@ Function Copy-Module
         $destination
     )
 
-    $ErrorActionPreference = "Stop"
+    $ErrorActionPreference = $PSSumoLogicAPI.errorPreference
 
     if(Test-Path $path)
     {

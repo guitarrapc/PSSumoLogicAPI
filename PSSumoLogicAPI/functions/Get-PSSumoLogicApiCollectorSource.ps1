@@ -83,7 +83,7 @@ function Get-PSSumoLogicApiCollectorSource
                 Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorIds $CollectorIds -SourceIds $SourceIds -credential $Credential
             }
         }
-        else
+        else # not Async Invokation
         {
             foreach ($CollectorId in $CollectorIds)
             {

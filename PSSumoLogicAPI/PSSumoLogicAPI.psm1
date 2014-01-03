@@ -37,7 +37,7 @@ function Import-PSSumoLogicAPIConfiguration
         $configdir = $PSSumoLogicAPI.modulePath
     )
 
-    $ErrorActionPreference = "Stop"
+    $ErrorActionPreference = $PSSumoLogicAPI.errorPreference
 
     $PSSumoLogicAPIConfigFilePath = (Join-Path $configdir $PSSumoLogicAPI.defaultconfigurationfile)
 
