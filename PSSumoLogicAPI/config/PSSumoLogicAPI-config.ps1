@@ -18,3 +18,6 @@ $PSSumoLogicAPI.runSpacePool = @{
     minPoolSize                    = 50
     maxPoolSize                    = 50
 }
+
+# Project Name for SumoLogic Source Explanation
+$PSSumoLogicAPI.Project = "INPUT PROJECT NAME for source explanation"

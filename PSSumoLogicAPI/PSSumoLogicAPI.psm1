@@ -93,6 +93,9 @@ $PSSumoLogicAPI.credential = @{
     user                           = "INPUT YOUR Email Address to logon"
 }
 
+# Project Name for SumoLogic Source Explanation
+$PSSumoLogicAPI.Project = "INPUT PROJECT NAME for source explanation"
+
 $PSSumoLogicAPI.sourceParameter    = @{
     alive                          = [bool]$true
     states                         = [string]""
