@@ -32,8 +32,7 @@ function Get-PSSumoLogicApiCredential
     {
         $credPassword = Get-Content -Path $CredPath | ConvertTo-SecureString
 
-        Write-Verbose ("force overrive current credential for User '{0}' from path '{1}'" -f $User, $credPath)
-        Write-Verbose "force overrive current credential for User [ $User ] from $CredPath"
+        Write-Verbose ("Over write credential for User '{0}' from '{1}'" -f $User, $CredPath)
         $cred = New-Object System.Management.Automation.PSCredential ($user, $Credpassword)
 
         return $cred

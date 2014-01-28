@@ -2,7 +2,7 @@
 
 # # -- Source cmdlets -- # #
 
-function Invoke-PSSumoLogicApiInvokeCollectorAsync
+function Remove-PSSumoLogicApiCollectorsAsync
 {
 
     [CmdletBinding()]
@@ -48,29 +48,14 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             }
 
             # Main Invokation
-
             # create sctiptblock Static
             Write-Debug "start asynchronous invokation"
-            if ($json -ne "")
-            {
-                Write-Verbose "Post json body"
-                $private:powershell = [PowerShell]::Create().
-                    AddScript($command).
-                    AddArgument($CollectorId).
-                    AddArgument($PSSumoLogicApi).
-                    AddArgument($credential).
-                    AddArgument($json).
-                    AddArgument($verbose)
-            }
-            else
-            {
-                $private:powershell = [PowerShell]::Create().
-                    AddScript($command).
-                    AddArgument($CollectorId).
-                    AddArgument($PSSumoLogicApi).
-                    AddArgument($credential).
-                    AddArgument($verbose)
-            }
+            $private:powershell = [PowerShell]::Create().
+                AddScript($command).
+                AddArgument($CollectorId).
+                AddArgument($PSSumoLogicApi).
+                AddArgument($credential).
+                AddArgument($verbose)
 
             # execute ScriptBlock
             $powershell.RunspacePool = $runspacePool

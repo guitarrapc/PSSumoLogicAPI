@@ -15,7 +15,7 @@ function Get-PSSumoLogicApiCollectorAsyncResult
         $runspaceCollection
     )
 
-    $ErrorActionPreference = $PSSumoLogicAPI.errorPreference
+    $ErrorActionPreference = "stop"
 
     # get Async result and end powershell session
     Write-Debug "obtain process result"

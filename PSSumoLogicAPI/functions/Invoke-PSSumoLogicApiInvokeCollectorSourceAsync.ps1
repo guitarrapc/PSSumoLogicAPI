@@ -39,7 +39,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         $Credential = (Get-SumoLogicApiCredential)
     )
 
-    $ErrorActionPreference = $PSSumoLogicAPI.errorPreference
+    $ErrorActionPreference = "stop"
 
     try
     {

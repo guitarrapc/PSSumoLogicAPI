@@ -27,38 +27,30 @@ function New-PSSumoLogicApiCredential
     $ErrorActionPreference = $PSSumoLogicApi.errorPreference
 
     $cred = Get-Credential -UserName $User -Message ("Input {0}'s Password to be save in '{1}'." -f $User, $path)
-
+    
     try
     {
-        # check credential is cancelled or not
-        if ($null -eq $cred)
+        # Set CredPath with current Username
+        $CredPath = Join-Path $path $User
+
+        if (-not (Test-Path $CredPath))
         {
-            Write-Error "Credential input was cancelled. Nothing will be execute."
+            Write-Verbose ("trying to create credential file in '{0}'" -f $CredPath)
+            New-Item -Path $CredPath -ItemType File -Force
         }
         else
         {
-            # Set CredPath with current Username
-            $CredPath = Join-Path $path $cred.UserName
-
-            if (-not (Test-Path $CredPath))
-            {
-                Write-Verbose ("trying to create credential file in '{0}'" -f $CredPath)
-                New-Item -Path $CredPath -ItemType File -Force
-            }
-            else
-            {
-                Write-Verbose -Message ("Removing old Credential Password for '{0}' had been sat in '{1}'" -f $cred.UserName, $CredPath)
-                Remove-Item -Path $CredPath -Force -Confirm
-            }
-
-            # get SecureString
-            $pass = $cred.Password | ConvertFrom-SecureString
-
-            Write-Verbose ("Saving old Credential Password for '{0}' in '{1}'" -f $cred.UserName, $CredPath)
-            $pass | Set-Content -Path $CredPath -Force
-
-            Write-Verbose -Message "Operation Completed."
+            Write-Verbose -Message ("Removing old Credential Password for '{0}' had been sat in '{1}'" -f $cred.UserName, $CredPath)
+            Remove-Item -Path $CredPath -Force -Confirm
         }
+
+        # get SecureString
+        $pass = $cred.Password | ConvertFrom-SecureString
+
+        Write-Verbose ("Saving old Credential Password for '{0}' in '{1}'" -f $cred.UserName, $CredPath)
+        $pass | Set-Content -Path $CredPath -Force
+
+        Write-Verbose -Message "Operation Completed."
     }
     catch [System.Management.Automation.ActionPreferenceStopException]
     {
