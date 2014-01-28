@@ -57,12 +57,12 @@ function Get-PSSumoLogicApiCollectorSource
                     Write-Verbose -Message "Sending Get source Request to $uri"
                     $result = if ($PSVersionTable.PSVersion.Major -ge "4")
                     {
-						Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
-					}
-					else
-					{
-						Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
-					}
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                    }
+                    else
+                    {
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
+                    }
                     $result
                 }
                                 
@@ -85,12 +85,12 @@ function Get-PSSumoLogicApiCollectorSource
                     Write-Verbose -Message "Sending Get source Request to $uri"
                     $result = if ($PSVersionTable.PSVersion.Major -ge "4")
                     {
-						Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
-					}
-					else
-					{
-						Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
-					}
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                    }
+                    else
+                    {
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
+                    }
                     $result
                 }
 
@@ -105,14 +105,14 @@ function Get-PSSumoLogicApiCollectorSource
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
                     Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
-					if ($PSVersionTable.PSVersion.Major -ge "4")
-					{
-						(Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).sources
-					}
-					else
-					{
-						(Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).sources
-					}
+                    if ($PSVersionTable.PSVersion.Major -ge "4")
+                    {
+                        (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).sources
+                    }
+                    else
+                    {
+                        (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).sources
+                    }
                     
                 }
                 else
@@ -121,14 +121,14 @@ function Get-PSSumoLogicApiCollectorSource
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $CollectorId, $SourceId))).uri
                         Write-Verbose -Message "Posting Get Source for specific Collector, souce Request to $uri"
-						if ($PSVersionTable.PSVersion.Major -ge "4")
-						{
-	                        (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).source
-						}
-						else
-						{
-	                        (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).source
-						}
+                        if ($PSVersionTable.PSVersion.Major -ge "4")
+                        {
+                            (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).source
+                        }
+                        else
+                        {
+                            (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).source
+                        }
                         
                     }
                 }

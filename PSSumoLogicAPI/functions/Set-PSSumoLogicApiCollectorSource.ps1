@@ -138,13 +138,13 @@ function Set-PSSumoLogicApiCollectorSource
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
                 Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
                 $sources = if ($PSVersionTable.PSVersion.Major -ge "4")
-				{
-					Invoke-RestMethod -Uri $uri  -Method Post -Headers $PSSumoLogicApi.contentType -Credential $Credential -Body $json
-				}
-				else
-				{
-					Invoke-RestMethod -Uri $uri  -Method Post -Credential $Credential -Body $json
-				}
+                {
+                    Invoke-RestMethod -Uri $uri  -Method Post -Headers $PSSumoLogicApi.contentType -Credential $Credential -Body $json
+                }
+                else
+                {
+                    Invoke-RestMethod -Uri $uri  -Method Post -Credential $Credential -Body $json
+                }
                 $Source.source
             }
         }

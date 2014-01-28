@@ -49,20 +49,35 @@ function Remove-PSSumoLogicApiCollector
 
                 $VerbosePreference = $verbose
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId -f $CollectorId))).uri
-                Write-Verbose -Message ("Sending Get source Request to {0}" -f $uri)
-                Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                Write-Verbose -Message "Sending Get source Request to $uri"
+                $result = if ($PSVersionTable.PSVersion.Major -ge "4")
+                {
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                }
+                else
+                {
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Credential $Credential
+                }
+                $result
             }
                                 
             Write-Verbose -Message "Posting Delete Collector Request to $uri"
             Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
         }
-        else # not Async Invokation
+        else
         {
             foreach ($CollectorId in $CollectorIds)
             {
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId-f $CollectorId))).uri
-                Write-Verbose -Message ("Posting Delete Collector Request to {0}" -f $uri)
-                Invoke-RestMethod -Uri $uri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                Write-Verbose -Message "Posting Delete Collector Request to $uri"
+                if ($PSVersionTable.PSVersion.Major -ge "4")
+                {
+                    Invoke-RestMethod -Uri $uri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                }
+                else
+                {
+                    Invoke-RestMethod -Uri $uri -Method Delete -Credential $Credential
+                }
             }
         }
     }
