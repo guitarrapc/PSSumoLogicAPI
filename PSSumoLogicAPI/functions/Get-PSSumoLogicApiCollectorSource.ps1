@@ -83,7 +83,7 @@ function Get-PSSumoLogicApiCollectorSource
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $CollectorId, $SourceId))).uri
                     Write-Verbose -Message "Sending Get source Request to $uri"
-                    $result = if ($PSVersionTable.PSVersion.Major -ge "4")
+                    if ($PSVersionTable.PSVersion.Major -ge "4")
                     {
                         Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
                     }
@@ -91,7 +91,6 @@ function Get-PSSumoLogicApiCollectorSource
                     {
                         Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
                     }
-                    $result
                 }
 
                 Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorIds $CollectorIds -SourceIds $SourceIds -credential $Credential
