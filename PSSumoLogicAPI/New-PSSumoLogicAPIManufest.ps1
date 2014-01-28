@@ -6,11 +6,11 @@ $script:RequiredModules = @()
 $script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1008" or "4.0.30319.1" , "4.0.30319.17929" (Win8/2012)
 
 $script:functionToExport = @(
-    "Get-PSSumoLogicApiCollectors",
+    "Get-PSSumoLogicApiCollector",
     "Get-PSSumoLogicApiCollectorSource",
     "Get-PSSumoLogicApiCredential",
     "New-PSSumoLogicApiCredential",
-    "Remove-PSSumoLogicApiCollectors",
+    "Remove-PSSumoLogicApiCollector",
     "Set-PSSumoLogicApiCollectorSource"
 )
 
