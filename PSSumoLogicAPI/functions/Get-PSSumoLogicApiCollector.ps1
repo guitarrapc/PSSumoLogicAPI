@@ -8,13 +8,14 @@ function Get-PSSumoLogicApiCollector
     [CmdletBinding()]
     param
     (
+        # Input CollectorId
         [parameter(
             position = 0,
             mandatory = 0,
             ValueFromPipeline,
             ValueFromPipelineByPropertyName)]
         [int[]]
-        $CollectorIds = $null,
+        $Id = $null,
 
         [parameter(
             position = 1,
@@ -30,71 +31,76 @@ function Get-PSSumoLogicApiCollector
         $Async
     )
 
-    $ErrorActionPreference = $PSSumoLogicApi.errorPreference
-    
-    try
+    begin
     {
-        if ($null -eq $CollectorIds)
-        {
-            [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, $PSSumoLogicAPI.uri.collector)).uri
-            $Collectors = Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential
-            $Collectors.collectors
-        }
-        else
-        {
-            if ($PSBoundParameters.Async.IsPresent)
-            {
-                Write-Verbose "Running Async execution"
-                $command = {
-                    param
-                    (
-                        [int]$CollectorId,
-                        [hashtable]$PSSumoLogicApi,
-                        [System.Management.Automation.PSCredential]$Credential,
-                        [string]$verbose
-                    )
+        $ErrorActionPreference = $PSSumoLogicApi.errorPreference
+    }
 
-                    $VerbosePreference = $verbose
-                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $CollectorId))).uri
-                    Write-Verbose -Message "Sending Get source Request to $uri"
-                    if ($PSVersionTable.PSVersion.Major -ge "4")
-                    {
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
-                    }
-                    else
-                    {
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
-                    }
-                }
-                                
-                Write-Verbose -Message "Sending Get Collector Rquest to $uri"
-                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
+    process
+    {
+        try
+        {
+            if ($null -eq $Id)
+            {
+                [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, $PSSumoLogicAPI.uri.collector)).uri
+                (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).collectors
             }
             else
             {
-                foreach ($CollectorId in $CollectorIds)
+                if ($PSBoundParameters.Async.IsPresent)
                 {
-                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $CollectorId))).uri
-                    Write-Verbose -Message "Sending Get Collector Request to $uri"
-                    if ($PSVersionTable.PSVersion.Major -ge "4")
-                    {
-                        (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).Collector
+                    Write-Verbose "Running Async execution"
+                    $command = {
+                        param
+                        (
+                            [int]$Collector,
+                            [hashtable]$PSSumoLogicApi,
+                            [System.Management.Automation.PSCredential]$Credential,
+                            [string]$verbose
+                        )
+
+                        $VerbosePreference = $verbose
+                        [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $Collector))).uri
+                        Write-Verbose -Message "Sending Get source Request to $uri"
+                        if ($PSVersionTable.PSVersion.Major -ge "4")
+                        {
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                        }
+                        else
+                        {
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
+                        }
                     }
-                    else
+                                
+                    Write-Verbose -Message "Sending Get Collector Rquest to $uri"
+                    Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential
+                }
+                else
+                {
+                    foreach ($Collector in $Id)
                     {
-                        (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).Collector
+                        [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $Collector))).uri
+                        Write-Verbose -Message "Sending Get Collector Request to $uri"
+                        if ($PSVersionTable.PSVersion.Major -ge "4")
+                        {
+                            (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).Collector
+                        }
+                        else
+                        {
+                            (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).Collector
+                        }
                     }
                 }
             }
-        }
         
-    }
-    catch [System.Management.Automation.ActionPreferenceStopException]
-    {
-        switch ($_.Exception)
+        }
+        catch [System.Management.Automation.ActionPreferenceStopException]
         {
-            [System.Net.WebException] {throw $_.Exception}
-            default                   {throw $_}
+            switch ($_.Exception)
+            {
+                [System.Net.WebException] {throw $_.Exception}
+                default                   {throw $_}
+            }
         }
     }
 }

@@ -7,5 +7,5 @@ $collectors = Get-PSSumoLogicApiCollector -Credential $credential
 
 # Obtain Source
 $host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorIds $collectors.id
+Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $collectors.id
 

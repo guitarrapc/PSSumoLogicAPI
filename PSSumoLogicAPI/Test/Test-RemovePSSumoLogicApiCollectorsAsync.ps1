@@ -7,4 +7,4 @@ $collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async | selec
 
 # Obtain each Collectors
 $host.Ui.WriteVerboseLine("Running Asynchronize request for each collectorId to remove collectors")
-Remove-PSSumoLogicApiCollector -CollectorIds $Collectors.id -Credential $credential -Async
+Remove-PSSumoLogicApiCollector -Id $Collectors.id -Credential $credential -Async

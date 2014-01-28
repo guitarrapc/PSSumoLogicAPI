@@ -7,6 +7,7 @@ function Get-PSSumoLogicApiCollectorSource
     [CmdletBinding(
     )]
     param(
+        # Input CollectorId
         [parameter(
             position = 0,
             mandatory = 0,
@@ -14,13 +15,14 @@ function Get-PSSumoLogicApiCollectorSource
             ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [int[]]
-        $CollectorIds,
+        $CollectorId,
 
+        # Input Source Id
         [parameter(
             position = 1,
             mandatory = 0)]
         [int[]]
-        $SourceIds = $null,
+        $Id = $null,
 
         [parameter(
             position = 2,
@@ -36,106 +38,112 @@ function Get-PSSumoLogicApiCollectorSource
         $Async
     )
 
-    try
+    begin
     {
-        if ($PSBoundParameters.Async.IsPresent)
+        $ErrorActionPreference = $PSSumoLogicApi.errorPreference
+    }
+
+    process
+    {
+        try
         {
-            Write-Verbose "Running Async execution"
-            if ($null -eq $SourceIds)
+            if ($PSBoundParameters.Async.IsPresent)
             {
-                $command = {
-                    param
-                    (
-                        [int]$CollectorId,
-                        [hashtable]$PSSumoLogicApi,
-                        [System.Management.Automation.PSCredential]$Credential,
-                        [string]$verbose
-                    )
-
-                    $VerbosePreference = $verbose
-                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
-                    Write-Verbose -Message "Sending Get source Request to $uri"
-                    $result = if ($PSVersionTable.PSVersion.Major -ge "4")
-                    {
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
-                    }
-                    else
-                    {
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
-                    }
-                    $result
-                }
-                                
-                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
-            }
-            else
-            {
-                $command = {
-                    param
-                    (
-                        [int]$CollectorId,
-                        [int]$SourceId,
-                        [hashtable]$PSSumoLogicApi,
-                        [System.Management.Automation.PSCredential]$Credential,
-                        [string]$verbose
-                    )
-
-                    $VerbosePreference = $verbose
-                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $CollectorId, $SourceId))).uri
-                    Write-Verbose -Message "Sending Get source Request to $uri"
-                    if ($PSVersionTable.PSVersion.Major -ge "4")
-                    {
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
-                    }
-                    else
-                    {
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
-                    }
-                }
-
-                Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorIds $CollectorIds -SourceIds $SourceIds -credential $Credential
-            }
-        }
-        else
-        {
-            foreach ($CollectorId in $CollectorIds)
-            {
-                if ($null -eq $SourceIds)
+                Write-Verbose "Running Async execution"
+                if ($null -eq $SourceId)
                 {
-                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $CollectorId))).uri
-                    Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
-                    if ($PSVersionTable.PSVersion.Major -ge "4")
-                    {
-                        (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).sources
-                    }
-                    else
-                    {
-                        (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).sources
-                    }
-                    
-                }
-                else
-                {
-                    foreach ($SourceId in $SourceIds)
-                    {
-                        [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $CollectorId, $SourceId))).uri
-                        Write-Verbose -Message "Posting Get Source for specific Collector, souce Request to $uri"
+                    $command = {
+                        param
+                        (
+                            [int]$Collector,
+                            [hashtable]$PSSumoLogicApi,
+                            [System.Management.Automation.PSCredential]$Credential,
+                            [string]$verbose
+                        )
+
+                        $VerbosePreference = $verbose
+                        [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
+                        Write-Verbose -Message "Sending Get source Request to $uri"
                         if ($PSVersionTable.PSVersion.Major -ge "4")
                         {
-                            (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).source
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
                         }
                         else
                         {
-                            (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).source
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
                         }
-                        
+                    }
+                                
+                    Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $CollectorId -credential $Credential
+                }
+                else
+                {
+                    $command = {
+                        param
+                        (
+                            [int]$Collector,
+                            [int]$Source,
+                            [hashtable]$PSSumoLogicApi,
+                            [System.Management.Automation.PSCredential]$Credential,
+                            [string]$verbose
+                        )
+
+                        $VerbosePreference = $verbose
+                        [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
+                        Write-Verbose -Message "Sending Get source Request to $uri"
+                        if ($PSVersionTable.PSVersion.Major -ge "4")
+                        {
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                        }
+                        else
+                        {
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -Credential $Credential
+                        }
+                    }
+
+                    Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorId $CollectorId -SourceId $Id -credential $Credential
+                }
+            }
+            else
+            {
+                foreach ($Collector in $CollectorId)
+                {
+                    if ($null -eq $Id)
+                    {
+                        [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
+                        Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
+                        if ($PSVersionTable.PSVersion.Major -ge "4")
+                        {
+                            (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).sources
+                        }
+                        else
+                        {
+                            (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).sources
+                        }
+                    
+                    }
+                    else
+                    {
+                        foreach ($Source in $Id)
+                        {
+                            [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
+                            Write-Verbose -Message "Posting Get Source for specific Collector, souce Request to $uri"
+                            if ($PSVersionTable.PSVersion.Major -ge "4")
+                            {
+                                (Invoke-RestMethod -Uri $uri -Method Get -Headers $PSSumoLogicApi.contentType -Credential $Credential).source
+                            }
+                            else
+                            {
+                                (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).source
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-    catch
-    {
-        throw $_
+        catch
+        {
+            throw $_
+        }
     }
 }

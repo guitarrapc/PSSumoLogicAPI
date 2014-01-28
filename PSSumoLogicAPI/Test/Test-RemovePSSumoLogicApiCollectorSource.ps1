@@ -9,8 +9,8 @@ $collectors = Get-PSSumoLogicApiCollector -Credential $credential | select -Firs
 $collectors `
 | %{
     $host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-    $souces = Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorIds $_.id
+    $souces = Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $_.id
 
     # Remove each souces in per Collectors
     $host.Ui.WriteVerboseLine("Running Synchronize request for each collectorId")
-    Remove-PSSumoLogicApiCollectorSource -CollectorIds $_.id -SourceIds $souces.id -Credential $credential}
+    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id -Credential $credential}

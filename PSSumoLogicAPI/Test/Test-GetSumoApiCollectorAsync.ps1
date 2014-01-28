@@ -7,4 +7,4 @@ $collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async
 
 # Obtain each Collectors for first 5
 $host.Ui.WriteVerboseLine("Running Asynchronize request for each CollectorId")
-Get-PSSumoLogicApiCollector -Credential $credential -CollectorIds ($collectors.Id | select -First 5) -Async
+Get-PSSumoLogicApiCollector -Credential $credential -Id ($collectors.Id | select -First 5) -Async

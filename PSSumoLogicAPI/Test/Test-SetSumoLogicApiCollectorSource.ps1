@@ -6,4 +6,4 @@ $collectors = Get-PSSumoLogicApiCollector -Credential $credential | Select -Firs
 
 # Set Sources
 $host.Ui.WriteVerboseLine("Running Synchronize request to set sources")
-,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -CollectorIds $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential}
+,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -Id $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential}

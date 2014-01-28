@@ -30,7 +30,6 @@ function New-PSSumoLogicApiRunSpacePool
         # create Runspace
         Write-Debug ("creating runspace for powershell")
         $private:sessionstate = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
-        $private:minPoolSize  = 
         $private:runspacePool = [runspacefactory]::CreateRunspacePool($minRunSpacePoolSize, $maxRunSpacePoolSize,  $sessionstate, $Host) # create Runspace Pool
         $runspacePool.ApartmentState = "STA" # only STA mode supports
         return $runspacePool

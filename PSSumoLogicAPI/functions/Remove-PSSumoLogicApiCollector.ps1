@@ -8,6 +8,7 @@ function Remove-PSSumoLogicApiCollector
     [CmdletBinding()]
     param
     (
+        # Input CollectorId
         [parameter(
             position = 0,
             mandatory = 0,
@@ -15,7 +16,7 @@ function Remove-PSSumoLogicApiCollector
             ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [int[]]
-        $CollectorIds,
+        $Id,
 
         [parameter(
             position = 1,
@@ -31,58 +32,63 @@ function Remove-PSSumoLogicApiCollector
         $Async
     )
 
-    $ErrorActionPreference = $PSSumoLogicApi.errorPreference
-
-    try
+    begin
     {
-        if ($PSBoundParameters.Async.IsPresent)
-        {
-            Write-Verbose "Running Async execution"
-            $command = {
-                param
-                (
-                    [int]$CollectorId,
-                    [hashtable]$PSSumoLogicApi,
-                    [System.Management.Automation.PSCredential]$Credential,
-                    [string]$verbose
-                )
-
-                $VerbosePreference = $verbose
-                [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId -f $CollectorId))).uri
-                Write-Verbose -Message "Sending Get source Request to $uri"
-                $result = if ($PSVersionTable.PSVersion.Major -ge "4")
-                {
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
-                }
-                else
-                {
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Credential $Credential
-                }
-                $result
-            }
-                                
-            Write-Verbose -Message "Posting Delete Collector Request to $uri"
-            Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorIds $CollectorIds -credential $Credential
-        }
-        else
-        {
-            foreach ($CollectorId in $CollectorIds)
-            {
-                [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId-f $CollectorId))).uri
-                Write-Verbose -Message "Posting Delete Collector Request to $uri"
-                if ($PSVersionTable.PSVersion.Major -ge "4")
-                {
-                    Invoke-RestMethod -Uri $uri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
-                }
-                else
-                {
-                    Invoke-RestMethod -Uri $uri -Method Delete -Credential $Credential
-                }
-            }
-        }
+        $ErrorActionPreference = $PSSumoLogicApi.errorPreference
     }
-    catch
+
+    process
     {
-        throw $_
+        try
+        {
+            if ($PSBoundParameters.Async.IsPresent)
+            {
+                Write-Verbose "Running Async execution"
+                $command = {
+                    param
+                    (
+                        [int]$Collector,
+                        [hashtable]$PSSumoLogicApi,
+                        [System.Management.Automation.PSCredential]$Credential,
+                        [string]$verbose
+                    )
+
+                    $VerbosePreference = $verbose
+                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId -f $Collector))).uri
+                    Write-Verbose -Message "Sending Get source Request to $uri"
+                    if ($PSVersionTable.PSVersion.Major -ge "4")
+                    {
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                    }
+                    else
+                    {
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Credential $Credential
+                    }
+                }
+                                
+                Write-Verbose -Message "Posting Delete Collector Request to $uri"
+                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential
+            }
+            else
+            {
+                foreach ($Collector in $Id)
+                {
+                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId-f $Collector))).uri
+                    Write-Verbose -Message "Posting Delete Collector Request to $uri"
+                    if ($PSVersionTable.PSVersion.Major -ge "4")
+                    {
+                        Invoke-RestMethod -Uri $uri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                    }
+                    else
+                    {
+                        Invoke-RestMethod -Uri $uri -Method Delete -Credential $Credential
+                    }
+                }
+            }
+        }
+        catch
+        {
+            throw $_
+        }
     }
 }

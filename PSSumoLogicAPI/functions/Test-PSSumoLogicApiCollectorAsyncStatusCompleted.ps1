@@ -14,7 +14,7 @@ function Test-PSSumoLogicApiCollectorAsyncStatusCompleted
         $PowerShellAsyncResult
     )
 
-    $ErrorActionPreference = "stop"
+    $ErrorActionPreference = $PSSumoLogicApi.errorPreference
 
     # check process result
     Write-Debug "check asynchronos execution has done"

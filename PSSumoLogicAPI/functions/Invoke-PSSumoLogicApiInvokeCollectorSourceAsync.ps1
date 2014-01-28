@@ -18,13 +18,13 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
             position = 1,
             mandatory = 1)]
         [int[]]
-        $CollectorIds,
+        $CollectorId,
 
         [parameter(
             position = 1,
             mandatory = 1)]
         [int[]]
-        $SourceIds,
+        $SourceId,
 
         [parameter(
             position = 1,
@@ -39,7 +39,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         $Credential = (Get-SumoLogicApiCredential)
     )
 
-    $ErrorActionPreference = "stop"
+    $ErrorActionPreference = $PSSumoLogicApi.errorPreference
 
     try
     {
@@ -47,9 +47,9 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         $runSpacePool = New-PSSumoLogicApiRunSpacePool
         $runSpacePool.Open()
 
-        foreach ($CollectorId in $CollectorIds)
+        foreach ($Collector in $CollectorId)
         {
-            foreach ($SourceId in $SourceIds)
+            foreach ($Source in $SourceId)
             {
                 # Verbose settings for Async Command inside
                 if ($PSBoundParameters.Verbose.IsPresent)
@@ -66,8 +66,8 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
                 Write-Debug "start asynchronous invokation"
                 $private:powershell = [PowerShell]::Create().
                     AddScript($command).
-                    AddArgument($CollectorId).
-                    AddArgument($SourceId).
+                    AddArgument($Collector).
+                    AddArgument($Source).
                     AddArgument($PSSumoLogicApi).
                     AddArgument($credential).
                     AddArgument($verbose)

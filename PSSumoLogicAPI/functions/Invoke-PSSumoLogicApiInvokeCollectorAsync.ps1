@@ -18,7 +18,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             position = 1,
             mandatory = 1)]
         [int[]]
-        $CollectorIds,
+        $CollectorId,
 
         [parameter(
             position = 2,
@@ -35,7 +35,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
         $runSpacePool = New-PSSumoLogicApiRunSpacePool
         $runSpacePool.Open()
 
-        foreach ($CollectorId in $CollectorIds)
+        foreach ($Collector in $CollectorId)
         {
             # Verbose settings for Async Command inside
             if ($PSBoundParameters.Verbose.IsPresent)
@@ -56,7 +56,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                 Write-Verbose "Post json body"
                 $private:powershell = [PowerShell]::Create().
                     AddScript($command).
-                    AddArgument($CollectorId).
+                    AddArgument($Collector).
                     AddArgument($PSSumoLogicApi).
                     AddArgument($credential).
                     AddArgument($json).
@@ -66,7 +66,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             {
                 $private:powershell = [PowerShell]::Create().
                     AddScript($command).
-                    AddArgument($CollectorId).
+                    AddArgument($Collector).
                     AddArgument($PSSumoLogicApi).
                     AddArgument($credential).
                     AddArgument($verbose)
