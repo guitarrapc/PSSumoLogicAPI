@@ -26,20 +26,14 @@ Get-Command -Module PSSumoLogicApi
 Here's Cmdlets use in public
 
 ```text
-CommandType Name                                             ModuleName    
------------ ----                                             ----------    
-Function    Get-PSSumoLogicApiCollector                      PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCollectorAsyncResult           PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCollectorSource                PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCredential                     PSSumoLogicAPI
-Function    Invoke-PSSumoLogicApiInvokeCollectorAsync        PSSumoLogicAPI
-Function    Invoke-PSSumoLogicApiInvokeCollectorSourceAsync  PSSumoLogicAPI
-Function    New-PSSumoLogicApiCredential                     PSSumoLogicAPI
-Function    New-PSSumoLogicApiRunSpacePool                   PSSumoLogicAPI
-Function    Remove-PSSumoLogicApiCollector                   PSSumoLogicAPI
-Function    Remove-PSSumoLogicApiCollectorSource             PSSumoLogicAPI
-Function    Set-PSSumoLogicApiCollectorSource                PSSumoLogicAPI
-Function    Test-PSSumoLogicApiCollectorAsyncStatusCompleted PSSumoLogicAPI
+CommandType Name                              ModuleName    
+----------- ----                              ----------    
+Function    Get-PSSumoLogicApiCollector       PSSumoLogicAPI
+Function    Get-PSSumoLogicApiCollectorSource PSSumoLogicAPI
+Function    Get-PSSumoLogicApiCredential      PSSumoLogicAPI
+Function    New-PSSumoLogicApiCredential      PSSumoLogicAPI
+Function    Remove-PSSumoLogicApiCollector    PSSumoLogicAPI
+Function    Set-PSSumoLogicApiCollectorSource PSSumoLogicAPI
 ```
 
 # Test
