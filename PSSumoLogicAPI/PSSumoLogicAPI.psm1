@@ -75,7 +75,7 @@ $PSSumoLogicAPI.debugPreference               = "SilentlyContinue"
 #-- Fixed parameters for SumoLogic Service --#
 
 # content type
-$PSSumoLogicAPI.contentType        = @{Accept="application/json"}
+$PSSumoLogicAPI.contentType        = "application/json"
 
 # uri
 $PSSumoLogicAPI.uri = @{

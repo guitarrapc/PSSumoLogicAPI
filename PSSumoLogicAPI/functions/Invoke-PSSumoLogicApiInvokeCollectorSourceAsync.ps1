@@ -21,16 +21,10 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         $CollectorId,
 
         [parameter(
-            position = 1,
+            position = 2,
             mandatory = 1)]
         [int[]]
         $SourceId,
-
-        [parameter(
-            position = 1,
-            mandatory = 0)]
-        [string]
-        $json = "",
 
         [parameter(
             position = 3,

@@ -65,10 +65,9 @@ function Remove-PSSumoLogicApiCollectorSource
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
-                    Write-Verbose -Message ("Sending Get source Request to {0}" -f $uri)
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential
+                    Write-Verbose -Message ("Posting Asynchronous Delete Source for Collector Request '{0}'" -f $uri)
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential
                 }
-
                 Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorId $CollectorId -SourceId $Id -credential $Credential
             }
             else # not Async Invokation
@@ -78,8 +77,8 @@ function Remove-PSSumoLogicApiCollectorSource
                     foreach ($Source in $Id)
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
-                        Write-Verbose -Message ("Posting Delete Source for specific Collector, souce Request to {0}" -f $uri)
-                        (Invoke-RestMethod -Uri $uri -Method Delete -Headers $PSSumoLogicApi.contentType -Credential $Credential).source
+                        Write-Verbose -Message ("Posting Synchronous Delete Source for Collector Request '{0}'" -f $uri)
+                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential).source
                     }
                 }
             }

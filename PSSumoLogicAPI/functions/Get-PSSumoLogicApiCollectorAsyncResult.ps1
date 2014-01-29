@@ -11,6 +11,7 @@ function Get-PSSumoLogicApiCollectorAsyncResult
         [parameter(
             position = 0,
             mandatory = 1)]
+        [ValidateNotNullOrEmpty()]
         [array]
         $runspaceCollection
     )

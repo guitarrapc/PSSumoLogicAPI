@@ -22,6 +22,12 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
 
         [parameter(
             position = 2,
+            mandatory = 0)]
+        [string]
+        $JsonBody = "",
+
+        [parameter(
+            position = 3,
             mandatory = 1)]
         [System.Management.Automation.PSCredential]
         $Credential = (Get-SumoLogicApiCredential)
@@ -51,7 +57,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
 
             # create sctiptblock Static
             Write-Debug "start asynchronous invokation"
-            if ($json -ne "")
+            if ($JsonBody -ne "")
             {
                 Write-Verbose "Post json body"
                 $private:powershell = [PowerShell]::Create().
@@ -59,7 +65,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                     AddArgument($Collector).
                     AddArgument($PSSumoLogicApi).
                     AddArgument($credential).
-                    AddArgument($json).
+                    AddArgument($JsonBody).
                     AddArgument($verbose)
             }
             else

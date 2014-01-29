@@ -102,7 +102,7 @@ function Set-PSSumoLogicApiCollectorSource
     {
         try
         {
-            $json = @{ 
+            $jsonBody = @{ 
                 source = @{ 
                     pathExpression = $pathExpression
                     name = $name
@@ -126,33 +126,24 @@ function Set-PSSumoLogicApiCollectorSource
                         [int]$Collector,
                         [hashtable]$PSSumoLogicApi,
                         [System.Management.Automation.PSCredential]$Credential,
-                        [string]$json,
+                        [string]$JsonBody,
                         [string]$verbose
                     )
 
                     $VerbosePreference = $verbose
-                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source-f $Collector))).uri
-                    Write-Verbose -Message "Sending Get source Request to $uri"
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -Credential $Credential -Body $json
+                    [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
+                    Write-Verbose -Message ("Posting Asynchronous Set Source for Collector Request '{0}'" -f $uri)
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody
                 }
-                                
-                Invoke-SumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential -Body $json
+                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential -JsonBody $jsonBody
             }
             else
             {
                 foreach ($Collector in $Id)
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
-                    Write-Verbose -Message "Posting Get Source for all Collectors Request to $uri"
-                    if ($PSVersionTable.PSVersion.Major -ge "4")
-                    {
-                        (Invoke-RestMethod -Uri $uri -Method Post -Headers $PSSumoLogicApi.contentType -Credential $Credential -Body $json).source
-                    }
-                    else
-                    {
-                        (Invoke-RestMethod -Uri $uri -Method Post -Credential $Credential -Body $json).source
-                    }
-                
+                    Write-Verbose -Message ("Posting Synchronous Set Source for Collector Request '{0}'" -f $uri)
+                    (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody).source                
                 }
             }
         }
