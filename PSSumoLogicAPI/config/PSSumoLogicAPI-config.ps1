@@ -15,8 +15,8 @@ $PSSumoLogicAPI.sourceParameter    = @{
 
 # RunSpace Pool size
 $PSSumoLogicAPI.runSpacePool = @{
-    minPoolSize                    = 50
-    maxPoolSize                    = 50
+    minPoolSize                    = 1
+    maxPoolSize                    = [int]($env:env:NUMBER_OF_PROCESSORS * 30)
 }
 
 # Project Name for SumoLogic Source Explanation
