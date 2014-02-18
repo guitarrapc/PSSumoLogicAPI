@@ -164,7 +164,7 @@ function Set-PSSumoLogicApiCollectorSource
 
                     $count++
                     Write-Verbose $count
-                    if ($count % 10 -eq 0)
+                    if ($count % 5 -eq 0)
                     {
                         $sleep = 60
                         Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
