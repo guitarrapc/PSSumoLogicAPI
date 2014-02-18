@@ -22,7 +22,7 @@ function Get-PSSumoLogicApiCollector
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
         [System.Management.Automation.PSCredential]
-        $Credential = (Get-SumoLogicApiCredential),
+        $Credential = (Get-PSSumoLogicApiCredential),
 
         [parameter(
             position = 2,
@@ -62,7 +62,7 @@ function Get-PSSumoLogicApiCollector
                         $VerbosePreference = $verbose
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $Collector))).uri
                         Write-Verbose -Message ("Sending Asynchronous Get Collector Request '{0}'" -f $uri)
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5
                     }                                
                     Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential
                 }
@@ -72,7 +72,7 @@ function Get-PSSumoLogicApiCollector
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $Collector))).uri
                         Write-Verbose -Message ("Sending Synchronous Get Collector Request '{0}'" -f $uri)
-                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential).Collector
+                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).Collector
                     }
                 }
             }

@@ -23,7 +23,7 @@ function Remove-PSSumoLogicApiCollector
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
         [System.Management.Automation.PSCredential]
-        $Credential = (Get-SumoLogicApiCredential),
+        $Credential = (Get-PSSumoLogicApiCredential),
 
         [parameter(
             position = 2,
@@ -56,7 +56,7 @@ function Remove-PSSumoLogicApiCollector
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId -f $Collector))).uri
                     Write-Verbose -Message ("Posting Asynchronous Delete Collector Request '{0}'" -f $uri)
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5
                 }
                 Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential
             }
@@ -66,7 +66,16 @@ function Remove-PSSumoLogicApiCollector
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collctorId-f $Collector))).uri
                     Write-Verbose -Message ("Posting Synchronous Delete Collector Request '{0}'" -f $uri)
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5
+
+                    $count++
+                    Write-Verbose $count
+                    if ($count % 10 -eq 0)
+                    {
+                        $sleep = 60
+                        "Sleep for {0} sec to avoid API limnits." -f $sleep
+                        sleep -Seconds $sleep
+                    }
                 }
             }
         }

@@ -84,7 +84,7 @@ function Set-PSSumoLogicApiCollectorSource
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
         [System.Management.Automation.PSCredential]
-        $Credential = (Get-SumoLogicApiCredential),
+        $Credential = (Get-PSSumoLogicApiCredential),
 
         [parameter(
             position = 12,
@@ -127,23 +127,53 @@ function Set-PSSumoLogicApiCollectorSource
                         [hashtable]$PSSumoLogicApi,
                         [System.Management.Automation.PSCredential]$Credential,
                         [string]$JsonBody,
-                        [string]$verbose
+                        [string]$verbose,
+                        [string]$name
                     )
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
-                    Write-Verbose -Message ("Posting Asynchronous Set Source for Collector Request '{0}'" -f $uri)
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody
+                    $checks = (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources
+                    foreach ($check in $checks)
+                    {
+                        if ($check.Name -eq $name)
+                        {
+                            Write-Warning ("source name '{0}' already exist. Skip to next." -f $name)
+                        }
+                        else
+                        {
+                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5
+                        }
+                    }
                 }
-                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential -JsonBody $jsonBody
+                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential -JsonBody $jsonBody -Name $name
             }
             else
             {
                 foreach ($Collector in $Id)
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
-                    Write-Verbose -Message ("Posting Synchronous Set Source for Collector Request '{0}'" -f $uri)
-                    (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody).source                
+                    $checks = (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources
+                    foreach ($check in $checks)
+                    {
+                        if ($check.Name -eq $name)
+                        {
+                            Write-Warning ("source name '{0}' already exist. Skip to next." -f $name)
+                        }
+                        else
+                        {
+                            (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5).source 
+                        }
+                    }
+
+                    $count++
+                    Write-Verbose $count
+                    if ($count % 10 -eq 0)
+                    {
+                        $sleep = 60
+                        "Sleep for {0} sec to avoid API limnits." -f $sleep
+                        sleep -Seconds $sleep
+                    }
                 }
             }
         }

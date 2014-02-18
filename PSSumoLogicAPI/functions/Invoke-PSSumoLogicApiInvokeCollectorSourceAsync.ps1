@@ -30,7 +30,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
             position = 3,
             mandatory = 1)]
         [System.Management.Automation.PSCredential]
-        $Credential = (Get-SumoLogicApiCredential)
+        $Credential = (Get-PSSumoLogicApiCredential)
     )
 
     $ErrorActionPreference = $PSSumoLogicApi.errorPreference
@@ -72,6 +72,15 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
                 [array]$private:RunspaceCollection += New-Object -TypeName PSObject -Property @{
                     Runspace = $powershell.BeginInvoke();
                     powershell = $powershell
+                }
+
+                $count++
+                Write-Verbose $count
+                if ($count % 10 -eq 0)
+                {
+                    $sleep = 60
+                    "Sleep for {0} sec to avoid API limnits." -f $sleep
+                    sleep -Seconds $sleep
                 }
             }
         }

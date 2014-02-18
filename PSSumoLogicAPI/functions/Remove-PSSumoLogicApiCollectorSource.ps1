@@ -32,7 +32,7 @@ function Remove-PSSumoLogicApiCollectorSource
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
         [System.Management.Automation.PSCredential]
-        $Credential = (Get-SumoLogicApiCredential),
+        $Credential = (Get-PSSumoLogicApiCredential),
 
         [parameter(
             position = 3,
@@ -66,7 +66,7 @@ function Remove-PSSumoLogicApiCollectorSource
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
                     Write-Verbose -Message ("Posting Asynchronous Delete Source for Collector Request '{0}'" -f $uri)
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential
+                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5
                 }
                 Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorId $CollectorId -SourceId $Id -credential $Credential
             }
@@ -78,7 +78,16 @@ function Remove-PSSumoLogicApiCollectorSource
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
                         Write-Verbose -Message ("Posting Synchronous Delete Source for Collector Request '{0}'" -f $uri)
-                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential).source
+                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).source
+
+                        $count++
+                        Write-Verbose $count
+                        if ($count % 10 -eq 0)
+                        {
+                            $sleep = 60
+                            "Sleep for {0} sec to avoid API limnits." -f $sleep
+                            sleep -Seconds $sleep
+                        }
                     }
                 }
             }

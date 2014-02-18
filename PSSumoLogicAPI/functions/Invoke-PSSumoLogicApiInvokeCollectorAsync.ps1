@@ -30,10 +30,16 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             position = 3,
             mandatory = 1)]
         [System.Management.Automation.PSCredential]
-        $Credential = (Get-SumoLogicApiCredential)
+        $Credential = (Get-PSSumoLogicApiCredential),
+
+        [parameter(
+            position = 4,
+            mandatory = 0)]
+        [string]
+        $name = ""
     )
 
-    $ErrorActionPreference = "stop"
+    $ErrorActionPreference = $PSSumoLogicAPI.errorPreference 
 
     try
     {
@@ -75,7 +81,8 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                     AddArgument($Collector).
                     AddArgument($PSSumoLogicApi).
                     AddArgument($credential).
-                    AddArgument($verbose)
+                    AddArgument($verbose).
+                    AddArgument($name)
             }
 
             # execute ScriptBlock
@@ -84,6 +91,15 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             [array]$private:RunspaceCollection += New-Object -TypeName PSObject -Property @{
                 Runspace = $powershell.BeginInvoke();
                 powershell = $powershell
+            }
+
+            $count++
+            Write-Verbose $count
+            if ($count % 10 -eq 0)
+            {
+                $sleep = 60
+                "Sleep for {0} sec to avoid API limnits." -f $sleep
+                sleep -Seconds $sleep
             }
         }
         

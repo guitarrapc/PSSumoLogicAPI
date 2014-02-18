@@ -24,7 +24,7 @@ function Get-PSSumoLogicApiCollectorAsyncResult
     {
         # obtain Asynchronos command result
         $private:task = $runspace.powershell.EndInvoke($runspace.Runspace)
-            
+
         $property = ($task | Get-Member -MemberType NoteProperty).Name
             
         # show result
