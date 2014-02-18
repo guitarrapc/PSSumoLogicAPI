@@ -134,16 +134,14 @@ function Set-PSSumoLogicApiCollectorSource
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
                     $checks = (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources
-                    foreach ($check in $checks)
+                    if ($name -in $checks.Name)
                     {
-                        if ($check.Name -eq $name)
-                        {
-                            Write-Warning ("source name '{0}' already exist. Skip to next." -f $name)
-                        }
-                        else
-                        {
-                            Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5
-                        }
+                        Write-Warning ("source name '{0}' already exist in '{1}'. Skip to next." -f $name, ($checks.Name -join ", "))
+                    }
+                    else
+                    {
+                        Write-Verbose ("source name '{0}' not found from check result '{1}'." -f $name, $check.Name)
+                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5
                     }
                 }
                 Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential -JsonBody $jsonBody -Name $name
@@ -154,16 +152,14 @@ function Set-PSSumoLogicApiCollectorSource
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
                     $checks = (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources
-                    foreach ($check in $checks)
+                    if ($name -in $checks.Name)
                     {
-                        if ($check.Name -eq $name)
-                        {
-                            Write-Warning ("source name '{0}' already exist. Skip to next." -f $name)
-                        }
-                        else
-                        {
-                            (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5).source 
-                        }
+                        Write-Warning ("source name '{0}' already exist in '{1}'. Skip to next." -f $name, ($checks.Name -join ", "))
+                    }
+                    else
+                    {
+                        Write-Verbose ("source name '{0}' not found from check result '{1}'." -f $name, $($checks.Name))
+                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5).source 
                     }
 
                     $count++
@@ -171,7 +167,7 @@ function Set-PSSumoLogicApiCollectorSource
                     if ($count % 10 -eq 0)
                     {
                         $sleep = 60
-                        "Sleep for {0} sec to avoid API limnits." -f $sleep
+                        Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
                         sleep -Seconds $sleep
                     }
                 }

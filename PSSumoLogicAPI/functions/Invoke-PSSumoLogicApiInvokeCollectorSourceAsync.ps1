@@ -79,7 +79,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
                 if ($count % 10 -eq 0)
                 {
                     $sleep = 60
-                    "Sleep for {0} sec to avoid API limnits." -f $sleep
+                    Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
                     sleep -Seconds $sleep
                 }
             }
