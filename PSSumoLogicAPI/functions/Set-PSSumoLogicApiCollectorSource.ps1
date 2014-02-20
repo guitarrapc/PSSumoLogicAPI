@@ -161,15 +161,6 @@ function Set-PSSumoLogicApiCollectorSource
                         Write-Verbose ("source name '{0}' not found from check result '{1}'." -f $name, $($checks.Name))
                         (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5).source 
                     }
-
-                    $count++
-                    Write-Verbose $count
-                    if ($count % 5 -eq 0)
-                    {
-                        $sleep = 60
-                        Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
-                        sleep -Seconds $sleep
-                    }
                 }
             }
         }

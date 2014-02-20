@@ -92,15 +92,6 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                 Runspace = $powershell.BeginInvoke();
                 powershell = $powershell
             }
-
-            $count++
-            Write-Verbose $count
-            if ($count % 5 -eq 0)
-            {
-                $sleep = 60
-                Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
-                sleep -Seconds $sleep
-            }
         }
         
         # check process result

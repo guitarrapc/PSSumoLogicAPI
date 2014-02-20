@@ -98,15 +98,6 @@ function Get-PSSumoLogicApiCollectorSource
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
                         Write-Verbose -Message ("Sending Synchronous Get Collector Source Request '{0}'" -f $uri)
                         (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources                    
-
-                        $count++
-                        Write-Verbose $count
-                        if ($count % 5 -eq 0)
-                        {
-                            $sleep = 60
-                            Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
-                            sleep -Seconds $sleep
-                        }
                     }
                     else
                     {
@@ -115,15 +106,6 @@ function Get-PSSumoLogicApiCollectorSource
                             [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
                             Write-Verbose -Message ("Sending Synchronous Get Collector Source Request '{0}'" -f $uri)
                             (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).source
-                            
-                            $count++
-                            Write-Verbose $count
-                            if ($count % 5 -eq 0)
-                            {
-                                $sleep = 60
-                                Write-Host ("Sleep for {0} sec to avoid API limnits." -f $sleep) -ForegroundColor cyan
-                                sleep -Seconds $sleep
-                            }
                         }
                     }
                 }

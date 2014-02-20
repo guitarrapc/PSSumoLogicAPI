@@ -79,15 +79,6 @@ function Remove-PSSumoLogicApiCollectorSource
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
                         Write-Verbose -Message ("Posting Synchronous Delete Source for Collector Request '{0}'" -f $uri)
                         (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).source
-
-                        $count++
-                        Write-Verbose $count
-                        if ($count % 5 -eq 0)
-                        {
-                            $sleep = 60
-                            "Sleep for {0} sec to avoid API limnits." -f $sleep
-                            sleep -Seconds $sleep
-                        }
                     }
                 }
             }
