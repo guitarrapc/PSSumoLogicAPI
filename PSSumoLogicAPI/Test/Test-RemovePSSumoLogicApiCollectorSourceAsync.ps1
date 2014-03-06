@@ -1,16 +1,19 @@
 ﻿# Get Credential
 $credential = Get-PSSumoLogicApiCredential
 
+# Get Websession for authorized Cookie
+Get-PSSumoLogicApiWebSession -Credential $credential
+
 # Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async | select -First 5
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+$collectors = Get-PSSumoLogicApiCollector | select -First 5
 
 # obtain Sources and remove it
 $collectors `
 | %{
     $host.Ui.WriteVerboseLine("Running Asynchronize request to get sources")
-    $souces = Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $_.id -Async
+    $souces = Get-PSSumoLogicApiCollectorSource -CollectorId $_.id -Async
 
     # Remove each souces in per Collectors
     $host.Ui.WriteVerboseLine("Running Asynchronize request for each collectorId")
-    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id -Credential $credential -Async}
+    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id -Async}

@@ -4,8 +4,7 @@
 
 function Get-PSSumoLogicApiCollectorSource
 {
-    [CmdletBinding(
-    )]
+    [CmdletBinding()]
     param(
         # Input CollectorId
         [parameter(
@@ -58,7 +57,6 @@ function Get-PSSumoLogicApiCollectorSource
             {
                 Write-Verbose "Running Async execution"
                 $asyncParam = @{
-                    Command     = $command
                     CollectorId = $CollectorId
                     WebSession  = $WebSession
                     timeoutSec  = $timeoutSec
@@ -89,7 +87,7 @@ function Get-PSSumoLogicApiCollectorSource
                         Invoke-RestMethod @param
                     }
 
-                    Invoke-PSSumoLogicApiInvokeCollectorAsync @asyncParam
+                    Invoke-PSSumoLogicApiInvokeCollectorAsync @asyncParam -Command $command
                 }
                 else
                 {
@@ -114,10 +112,10 @@ function Get-PSSumoLogicApiCollectorSource
                             timeoutSec   = $timeoutSec
                         }
                         Write-Verbose -Message ("Sending Asynchronous Get Collector Source Request '{0}'" -f $uri)
-                        Invoke-RestMethod @param
+                        Invoke-RestMethod @param -Command $command
                     }
 
-                    Invoke-PSSumoLogicApiInvokeCollectorSourceAsync @asyncParam -SourceId $id
+                    Invoke-PSSumoLogicApiInvokeCollectorSourceAsync @asyncParam -Command $command -SourceId $id
                 }
             }
             else

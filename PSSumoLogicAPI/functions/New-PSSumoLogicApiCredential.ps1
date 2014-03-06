@@ -50,7 +50,7 @@ function New-PSSumoLogicApiCredential
         Write-Verbose ("Saving old Credential Password for '{0}' in '{1}'" -f $cred.UserName, $CredPath)
         $pass | Set-Content -Path $CredPath -Force
 
-        Write-Verbose -Message "Operation Completed."
+        Write-Verbose -Message "Operation successfully completed."
     }
     catch [System.Management.Automation.ActionPreferenceStopException]
     {

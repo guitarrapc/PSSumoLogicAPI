@@ -117,7 +117,7 @@ function Set-PSSumoLogicApiCollectorSource
                 source = @{ 
                     pathExpression = $pathExpression
                     name = $name
-                    sourceType = $sourceType
+                    sourceType = "$sourceType"
                     category = $category
                     description = $description
                     alive = $alive
@@ -145,7 +145,6 @@ function Set-PSSumoLogicApiCollectorSource
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
-
                     $checkParam = @{
                         Uri         = $uri.AbsoluteUri
                         Method      = "Get"
@@ -209,7 +208,7 @@ function Set-PSSumoLogicApiCollectorSource
                             Method      = "Post"
                             ContentType = $PSSumoLogicApi.contentType 
                             Body        = $JsonBody 
-                            WebSession  = $WebSession 
+                            WebSession  = $WebSession
                             TimeoutSec  = $timeoutSec
                         }
                         Write-Verbose ("source name '{0}' not found from check result '{1}'." -f $name, $($checks.Name))

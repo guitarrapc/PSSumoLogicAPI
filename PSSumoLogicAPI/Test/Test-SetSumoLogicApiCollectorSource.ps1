@@ -1,9 +1,21 @@
-﻿$credential = Get-PSSumoLogicApiCredential
+﻿# Get Credential
+$credential = Get-PSSumoLogicApiCredential
+
+# Get Websession for authorized Cookie
+Get-PSSumoLogicApiWebSession -Credential $credential
 
 # Obtain Collectors
 $host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential | Select -First 2
+$collectors = Get-PSSumoLogicApiCollector | Select -First 2
 
 # Set Sources
 $host.Ui.WriteVerboseLine("Running Synchronize request to set sources")
-,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -Id $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential}
+$param = @{
+    Id             = $Collectors.Id
+    pathExpression = "C:\logs\Log.log"
+    name           = "Log"
+    sourceType     = "LocalFile"
+    category       = "Log Category"
+    description    = "Log Description"
+}
+Set-PSSumoLogicApiCollectorSource @param -Verbose

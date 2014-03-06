@@ -19,10 +19,10 @@ function Test-PSSumoLogicApiCollectorAsyncStatusCompleted
 
     # check process result
     Write-Debug "check asynchronos execution has done"
-    while (($PowerShellAsyncResult | sort IsCompleted -Unique).IsCompleted -ne $true)
+    while (($IsCompleted = ($PowerShellAsyncResult | sort IsCompleted -Unique).IsCompleted) -ne $true)
     {
         sleep -Milliseconds 2
     }
 
-    return ($PowerShellAsyncResult | sort IsCompleted -Unique).IsCompleted
+    return $IsCompleted
 }
