@@ -34,7 +34,6 @@ function Get-PSSumoLogicApiCredential
 
         Write-Verbose ("Overwrite credential for User '{0}' from '{1}'" -f $User, $CredPath)
         $cred = New-Object System.Management.Automation.PSCredential ($user, $Credpassword)
-
         return $cred
     }
     catch [System.Management.Automation.ActionPreferenceStopException]

@@ -33,8 +33,7 @@ function Set-PSSumoLogicApiCollectorSource
         [parameter(
             position = 3,
             mandatory = 1)]
-        [validateset("LocalFile", "RemoteFile", "LocalWindowsEventLog", "RemoteWindowsEventLog", "Syslog", "Script", "Alert", "AmazonS3", "HTTP")]
-        [string]
+        [SumoLogicSourceType]
         $sourceType,
 
         [parameter(
@@ -52,30 +51,35 @@ function Set-PSSumoLogicApiCollectorSource
         [parameter(
             position = 6,
             mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
         [bool]
         $alive = $PSSumoLogicApi.sourceParameter.alive,
 
         [parameter(
             position = 7,
             mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $states = $PSSumoLogicApi.sourceParameter.states,
 
         [parameter(
             position = 8,
             mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
         [bool]
         $automaticDateParsing = $PSSumoLogicApi.sourceParameter.automaticDateParsing,
 
         [parameter(
             position = 9,
             mandatory = 0)]
+        [validateScript({Check-PSSumoLogicTimeZone -TimeZone $_ })]
         [string]
         $timeZone = $PSSumoLogicApi.sourceParameter.timeZone,
 
         [parameter(
             position = 10,
             mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
         [bool]
         $multilineProcessingEnabled = $PSSumoLogicApi.sourceParameter.multilineProcessingEnabled,
 
@@ -83,11 +87,18 @@ function Set-PSSumoLogicApiCollectorSource
             position = 11,
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
-        [System.Management.Automation.PSCredential]
-        $Credential = (Get-PSSumoLogicApiCredential),
+        [Microsoft.PowerShell.Commands.WebRequestSession]
+        $WebSession = $PSSumoLogicAPI.WebSession,
 
         [parameter(
             position = 12,
+            mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
+        [int]
+        $timeoutSec = $PSSumoLogicAPI.TimeoutSec,
+
+        [parameter(
+            position = 13,
             mandatory = 0)]
         [switch]
         $Async
@@ -125,7 +136,8 @@ function Set-PSSumoLogicApiCollectorSource
                     (
                         [int]$Collector,
                         [hashtable]$PSSumoLogicApi,
-                        [System.Management.Automation.PSCredential]$Credential,
+                        [Microsoft.PowerShell.Commands.WebRequestSession]$WebSession,
+                        [int]$timeoutSec,
                         [string]$JsonBody,
                         [string]$verbose,
                         [string]$name
@@ -133,33 +145,75 @@ function Set-PSSumoLogicApiCollectorSource
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
-                    $checks = (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources
+
+                    $checkParam = @{
+                        Uri         = $uri.AbsoluteUri
+                        Method      = "Get"
+                        ContentType = $PSSumoLogicApi.contentType
+                        WebSession  = $WebSession
+                        TimeoutSec  = $timeoutSec
+                    }
+                    $checks = (Invoke-RestMethod @checkParam).sources
+
                     if ($name -in $checks.Name)
                     {
                         Write-Warning ("source name '{0}' already exist in '{1}'. Skip to next." -f $name, ($checks.Name -join ", "))
                     }
                     else
                     {
+                        $param = @{
+                            Uri         = $uri.AbsoluteUri
+                            Method      = "Post"
+                            ContentType = $PSSumoLogicApi.contentType 
+                            Body        = $JsonBody 
+                            WebSession  = $WebSession 
+                            TimeoutSec  = $timeoutSec
+                        }
                         Write-Verbose ("source name '{0}' not found from check result '{1}'." -f $name, $check.Name)
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5
+                        Invoke-RestMethod @param
                     }
                 }
-                Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential -JsonBody $jsonBody -Name $name
+
+                $asyncParam = @{
+                    Command     = $command
+                    CollectorId = $Id
+                    WebSession  = $WebSession
+                    TimeoutSec  = $timeoutSec
+                    JsonBody    = $jsonBody
+                    Name        = $name
+                }
+                Invoke-PSSumoLogicApiInvokeCollectorAsync @asyncParam
             }
             else
             {
                 foreach ($Collector in $Id)
                 {
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.source -f $Collector))).uri
-                    $checks = (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).sources
+                    $checkParam = @{
+                        Uri         = $uri.AbsoluteUri
+                        Method      = "Get"
+                        ContentType = $PSSumoLogicApi.contentType
+                        WebSession  = $WebSession
+                        TimeoutSec  = $timeoutSec
+                    }
+                    $checks = (Invoke-RestMethod @checkParam).sources
+
                     if ($name -in $checks.Name)
                     {
                         Write-Warning ("source name '{0}' already exist in '{1}'. Skip to next." -f $name, ($checks.Name -join ", "))
                     }
                     else
                     {
+                        $param = @{
+                            Uri         = $uri.AbsoluteUri
+                            Method      = "Post"
+                            ContentType = $PSSumoLogicApi.contentType 
+                            Body        = $JsonBody 
+                            WebSession  = $WebSession 
+                            TimeoutSec  = $timeoutSec
+                        }
                         Write-Verbose ("source name '{0}' not found from check result '{1}'." -f $name, $($checks.Name))
-                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Post -ContentType $PSSumoLogicApi.contentType -Credential $Credential -Body $JsonBody -TimeoutSec 5).source 
+                        (Invoke-RestMethod @param).source 
                     }
                 }
             }

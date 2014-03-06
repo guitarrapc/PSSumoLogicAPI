@@ -9,7 +9,7 @@ $PSSumoLogicAPI.sourceParameter    = @{
     alive                          = [bool]$true
     states                         = [string]""
     automaticDateParsing           = [bool]$true
-    timeZone                       = [string]"Asia/Tokyo"
+    timeZone                       = [string](Check-PSSumoLogicTimeZone -TimeZone Asia/Tokyo)
     multilineProcessingEnabled     = [bool]$true
 }
 

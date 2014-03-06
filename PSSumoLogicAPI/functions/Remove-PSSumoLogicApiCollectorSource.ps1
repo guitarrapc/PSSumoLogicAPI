@@ -31,8 +31,15 @@ function Remove-PSSumoLogicApiCollectorSource
             position = 2,
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
-        [System.Management.Automation.PSCredential]
-        $Credential = (Get-PSSumoLogicApiCredential),
+        [Microsoft.PowerShell.Commands.WebRequestSession]
+        $WebSession = $PSSumoLogicAPI.WebSession,
+
+        [parameter(
+            position = 3,
+            mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
+        [int]
+        $timeoutSec = $PSSumoLogicAPI.TimeoutSec,
 
         [parameter(
             position = 3,
@@ -59,16 +66,32 @@ function Remove-PSSumoLogicApiCollectorSource
                         [int]$Collector,
                         [int]$Source,
                         [hashtable]$PSSumoLogicApi,
-                        [System.Management.Automation.PSCredential]$Credential,
+                        [Microsoft.PowerShell.Commands.WebRequestSession]$WebSession,
+                        [int]$timeoutSec,
                         [string]$verbose
                     )
 
                     $VerbosePreference = $verbose
                     [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
+                    $param = @{
+                        Uri         = $uri.AbsoluteUri
+                        Method      = "Delete"
+                        ContentType = $PSSumoLogicApi.contentType
+                        WebSession  = $WebSession
+                        TimeoutSec  = $timeoutSec
+                    }
                     Write-Verbose -Message ("Posting Asynchronous Delete Source for Collector Request '{0}'" -f $uri)
-                    Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5
+                    Invoke-RestMethod @param
                 }
-                Invoke-PSSumoLogicApiInvokeCollectorSourceAsync -Command $command -CollectorId $CollectorId -SourceId $Id -credential $Credential
+
+                $asyncParam = @{
+                    Command     = $command
+                    CollectorId = $CollectorId
+                    SourceId    = $Id
+                    WebSession  = $WebSession
+                    timeoutSec  = $timeoutSec
+                }
+                Invoke-PSSumoLogicApiInvokeCollectorSourceAsync @asyncParam
             }
             else # not Async Invokation
             {
@@ -77,8 +100,15 @@ function Remove-PSSumoLogicApiCollectorSource
                     foreach ($Source in $Id)
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.sourceId -f $Collector, $Source))).uri
+                        $param = @{
+                            Uri         = $uri.AbsoluteUri
+                            Method      = "Delete"
+                            ContentType = $PSSumoLogicApi.contentType
+                            WebSession  = $WebSession
+                            TimeoutSec  = $timeoutSec
+                        }
                         Write-Verbose -Message ("Posting Synchronous Delete Source for Collector Request '{0}'" -f $uri)
-                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Delete -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).source
+                        (Invoke-RestMethod @param).source
                     }
                 }
             }

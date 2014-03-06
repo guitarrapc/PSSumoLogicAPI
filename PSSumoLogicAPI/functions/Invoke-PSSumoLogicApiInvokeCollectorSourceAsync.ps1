@@ -29,8 +29,14 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         [parameter(
             position = 3,
             mandatory = 1)]
-        [System.Management.Automation.PSCredential]
-        $Credential = (Get-PSSumoLogicApiCredential)
+        [Microsoft.PowerShell.Commands.WebRequestSession]
+        $WebSession,
+
+        [parameter(
+            position = 4,
+            mandatory = 1)]
+        [int]
+        $timeoutSec
     )
 
     $ErrorActionPreference = $PSSumoLogicApi.errorPreference
@@ -63,7 +69,8 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
                     AddArgument($Collector).
                     AddArgument($Source).
                     AddArgument($PSSumoLogicApi).
-                    AddArgument($credential).
+                    AddArgument($webSession).
+                    AddArgument($timeoutSec).
                     AddArgument($verbose)
 
                 # execute ScriptBlock

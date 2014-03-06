@@ -29,11 +29,17 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
         [parameter(
             position = 3,
             mandatory = 1)]
-        [System.Management.Automation.PSCredential]
-        $Credential = (Get-PSSumoLogicApiCredential),
+        [Microsoft.PowerShell.Commands.WebRequestSession]
+        $WebSession,
 
         [parameter(
             position = 4,
+            mandatory = 1)]
+        [int]
+        $timeoutSec,
+
+        [parameter(
+            position = 5,
             mandatory = 0)]
         [string]
         $name = ""
@@ -70,7 +76,8 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                     AddScript($command).
                     AddArgument($Collector).
                     AddArgument($PSSumoLogicApi).
-                    AddArgument($credential).
+                    AddArgument($webSession).
+                    AddArgument($timeoutSec).
                     AddArgument($JsonBody).
                     AddArgument($verbose)
             }
@@ -80,7 +87,8 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                     AddScript($command).
                     AddArgument($Collector).
                     AddArgument($PSSumoLogicApi).
-                    AddArgument($credential).
+                    AddArgument($webSession).
+                    AddArgument($timeoutSec).
                     AddArgument($verbose).
                     AddArgument($name)
             }

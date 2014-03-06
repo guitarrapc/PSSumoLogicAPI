@@ -21,11 +21,18 @@ function Get-PSSumoLogicApiCollector
             position = 1,
             mandatory = 0)]
         [ValidateNotNullOrEmpty()]
-        [System.Management.Automation.PSCredential]
-        $Credential = (Get-PSSumoLogicApiCredential),
+        [Microsoft.PowerShell.Commands.WebRequestSession]
+        $WebSession = $PSSumoLogicAPI.WebSession,
 
         [parameter(
             position = 2,
+            mandatory = 0)]
+        [ValidateNotNullOrEmpty()]
+        [int]
+        $timeoutSec = $PSSumoLogicAPI.TimeoutSec,
+
+        [parameter(
+            position = 3,
             mandatory = 0)]
         [switch]
         $Async
@@ -43,7 +50,7 @@ function Get-PSSumoLogicApiCollector
             if ($null -eq $Id)
             {
                 [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, $PSSumoLogicAPI.uri.collector)).uri
-                (Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential).collectors
+                (Invoke-RestMethod -Uri $uri -Method Get -WebSession $WebSession -TimeoutSec $timeoutSec).collectors
             }
             else
             {
@@ -55,24 +62,49 @@ function Get-PSSumoLogicApiCollector
                         (
                             [int]$Collector,
                             [hashtable]$PSSumoLogicApi,
-                            [System.Management.Automation.PSCredential]$Credential,
+                            [Microsoft.PowerShell.Commands.WebRequestSession]$WebSession,
+                            [int]$timeoutSec,
                             [string]$verbose
                         )
 
                         $VerbosePreference = $verbose
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $Collector))).uri
+                        $param = @{
+                            Uri         = $uri.AbsoluteUri
+                            Method      = "Get"
+                            ContentType = $PSSumoLogicApi.contentType
+                            WebSession  = $WebSession
+                            TimeoutSec  = $timeoutSec
+                        }
+
                         Write-Verbose -Message ("Sending Asynchronous Get Collector Request '{0}'" -f $uri)
-                        Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5
-                    }                                
-                    Invoke-PSSumoLogicApiInvokeCollectorAsync -Command $command -CollectorId $Id -credential $Credential
+                        Invoke-RestMethod @param
+                    }
+
+                    $asyncParam = @{
+                        Command     = $command
+                        CollectorId = $Id
+                        WebSession  = $WebSession
+                        timeoutSec  = $timeoutSec
+                    }
+                    Invoke-PSSumoLogicApiInvokeCollectorAsync @asyncParam
                 }
                 else
                 {
                     foreach ($Collector in $Id)
                     {
                         [uri]$uri = (New-Object System.UriBuilder ($PSSumoLogicApi.uri.scheme, ($PSSumoLogicAPI.uri.collectorId -f $Collector))).uri
+
+                        $param = @{
+                            Uri         = $uri.AbsoluteUri
+                            Method      = "Get"
+                            ContentType = $PSSumoLogicApi.contentType
+                            WebSession  = $WebSession
+                            TimeoutSec  = $timeoutSec
+                        }
+
                         Write-Verbose -Message ("Sending Synchronous Get Collector Request '{0}'" -f $uri)
-                        (Invoke-RestMethod -Uri $uri.AbsoluteUri -Method Get -ContentType $PSSumoLogicApi.contentType -Credential $Credential -TimeoutSec 5).Collector
+                        (Invoke-RestMethod @param).Collector
                     }
                 }
             }

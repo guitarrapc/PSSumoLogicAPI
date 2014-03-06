@@ -9,6 +9,7 @@ $script:functionToExport = @(
     "Get-PSSumoLogicApiCollector",
     "Get-PSSumoLogicApiCollectorSource",
     "Get-PSSumoLogicApiCredential",
+    "Get-PSSumoLogicApiWebSession",
     "New-PSSumoLogicApiCredential",
     "Remove-PSSumoLogicApiCollector",
     "Remove-PSSumoLogicApiCollectorSource",
