@@ -59,23 +59,68 @@
 
 <p>Here's Cmdlets use in public</p>
 
-<div class="highlight highlight-text"><pre>CommandType Name                              ModuleName    
------------ ----                              ----------    
-Function    Get-PSSumoLogicApiCollector       PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCollectorSource PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCredential      PSSumoLogicAPI
-Function    New-PSSumoLogicApiCredential      PSSumoLogicAPI
-Function    Remove-PSSumoLogicApiCollector    PSSumoLogicAPI
-Function    Set-PSSumoLogicApiCollectorSource PSSumoLogicAPI
-</pre></div>
-
-<h1>
+<table>
+<thead><tr>
+<th>CommandType</th>
+<th>Name</th>
+<th>ModuleName</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Function</td>
+<td>Get-PSSumoLogicApiCollector</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Get-PSSumoLogicApiCollectorSource</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Get-PSSumoLogicApiCredential</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Get-PSSumoLogicApiWebSession</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>New-PSSumoLogicApiCredential</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Remove-PSSumoLogicApiCollector</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Remove-PSSumoLogicApiCollectorSource</td>
+<td>PSSumoLogicApi</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Set-PSSumoLogicApiCollectorSource</td>
+<td>PSSumoLogicApi</td>
+</tr>
+</tbody>
+</table><h1>
 <a name="test" class="anchor" href="#test"><span class="octicon octicon-link"></span></a>Test</h1>
 
 <p>You can find sample source in <a href="https://github.com/guitarrapc/PSSumoLogicAPI/tree/master/PSSumoLogicAPI/Test">Test</a></p>
 
 <h2>
 <a name="credential" class="anchor" href="#credential"><span class="octicon octicon-link"></span></a>Credential</h2>
+
+<p>Make sure SumoLogicAPI requires credential authentication for only first session.
+You will retrieve authenticated cookies when sending any API request with UserName/Password.
+Use this authenticated cookies as WebSession then you do not need to pass credential afterward.</p>
+
+<p>Make sure there is API limitation to try call API with credential, to retrieve websession/cookies.
+If you call API for continuous 15 times, then you will be rejected from API for 60 sec.</p>
 
 <h3>
 <a name="create-credential-secure-password-file" class="anchor" href="#create-credential-secure-password-file"><span class="octicon octicon-link"></span></a>Create Credential secure Password File</h3>
@@ -120,78 +165,77 @@ Function    Set-PSSumoLogicApiCollectorSource PSSumoLogicAPI
 </pre></div>
 
 <h2>
+<a name="web-session" class="anchor" href="#web-session"><span class="octicon octicon-link"></span></a>Web Session</h2>
+
+<p>Before starting call SumoLogic API, set authenticated websessions to $PSSumoLogicAPI.Websession module variable.
+After set this session, you can ignore any credential/session when call API.</p>
+
+<h3>
+<a name="set-authenticated-cookies-to-pssumologicapiwebsession" class="anchor" href="#set-authenticated-cookies-to-pssumologicapiwebsession"><span class="octicon octicon-link"></span></a>Set Authenticated cookies to $PSSumoLogicAPI.Websession</h3>
+
+<p>Get crednetial when obtain Websession.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
+<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
+</pre></div>
+
+<p>Then call SumoLogic API to get Web Session. If you add -PassThru switch, then retrived value will show in host.</p>
+
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain Session Variables</span>
+<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Get Sessionvariables and PassThru"</span><span class="p">)</span>
+<span class="nb">Get-PSSumoLogicApiWebSession</span> <span class="n">-PassThru</span>
+</pre></div>
+
+<p>Web Session value in contains in Module variable $PSSumoLogicAPI.WebSession.</p>
+
+<div class="highlight highlight-Powershell"><pre><span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Output whether session contains in PSSumoLogicAPI variable."</span><span class="p">)</span>
+<span class="nv">$PSSumoLogicAPI</span><span class="p">.</span><span class="n">WebSession</span>
+</pre></div>
+
+<h2>
 <a name="collector" class="anchor" href="#collector"><span class="octicon octicon-link"></span></a>Collector</h2>
 
 <h3>
 <a name="get-sumologic-collectors-of-your-account" class="anchor" href="#get-sumologic-collectors-of-your-account"><span class="octicon octicon-link"></span></a>Get SumoLogic Collectors of your account</h3>
 
-<div class="highlight highlight-PowerShell"><pre><span class="nb">Get-PSSumoLogicApiCollectors</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
-</pre></div>
+<p>Now you can call SumoLogicAPI.</p>
 
-<p>You can reuse collectors.</p>
-
-<div class="highlight highlight-PowerShell"><pre><span class="nv">$Collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollectors</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$Collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollectors</span>
+<span class="nv">$Collectors</span>
 </pre></div>
 
 <p>specify collector ids.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
-
-<span class="c"># Obtain each Collectors for first 5</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain each Collectors for first 5</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request for each collectorId"</span><span class="p">)</span>
-<span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="p">(</span><span class="nv">$collectors</span><span class="p">.</span><span class="n">Id</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span><span class="p">)</span>
+<span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Id</span> <span class="p">(</span><span class="nv">$collectors</span><span class="p">.</span><span class="n">Id</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span><span class="p">)</span>
 </pre></div>
 
 <p>for multiple collectorIds, you can use -Async switch to invoke command asynchronous.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span>
-
-<span class="c"># Obtain each Collectors for first 5</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request for each CollectorId"</span><span class="p">)</span>
-<span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="p">(</span><span class="nv">$collectors</span><span class="p">.</span><span class="n">Id</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span><span class="p">)</span> <span class="n">-Async</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain each Collectors for first 5</span>
+<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronous request for each CollectorId"</span><span class="p">)</span>
+<span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Id</span> <span class="p">(</span><span class="nv">$collectors</span><span class="p">.</span><span class="n">Id</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span><span class="p">)</span> <span class="n">-Async</span> <span class="n">-Verbose</span>
 </pre></div>
 
-<p>it will speed up about x5 then not using switch.</p>
+<p>It will speed up about 2-10 times then synchronous each collector id calls.</p>
 
 <h3>
 <a name="remove-collectors" class="anchor" href="#remove-collectors"><span class="octicon octicon-link"></span></a>Remove Collectors</h3>
 
 <p>Specify Collector id to remove collectors.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span>
-
-<span class="c"># Remove each Collectors</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Remove each Collectors</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request for each collectorId to remove collectors"</span><span class="p">)</span>
-<span class="nb">Remove-PSSumoLogicApiCollector</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+<span class="nb">Remove-PSSumoLogicApiCollector</span> <span class="n">-Id</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span>
 </pre></div>
 
-<p>Asynchronouse execution will speed up.</p>
+<p>for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span>
-
-<span class="c"># Obtain each Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request for each collectorId to remove collectors"</span><span class="p">)</span>
-<span class="nb">Remove-PSSumoLogicApiCollector</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain each Collectors</span>
+<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronous request for each collectorId to remove collectors"</span><span class="p">)</span>
+<span class="nb">Remove-PSSumoLogicApiCollector</span> <span class="n">-Id</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Async</span>
 </pre></div>
 
 <p>It may good to filter Collector name, OS or status to select which collector to delete.
@@ -201,48 +245,31 @@ Where-Object or .Where({}) will ease you filtering object.</p>
 <a name="source" class="anchor" href="#source"><span class="octicon octicon-link"></span></a>Source</h2>
 
 <h3>
-<a name="get-sumologic-source-for-collectors-of-your-account" class="anchor" href="#get-sumologic-source-for-collectors-of-your-account"><span class="octicon octicon-link"></span></a>Get SumoLogic Source for Collectors of your account</h3>
+<a name="get-collector-source" class="anchor" href="#get-collector-source"><span class="octicon octicon-link"></span></a>Get Collector Source</h3>
 
 <p>Get all collectors source.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain Collectors</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span>
+<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span>
 
 <span class="c"># Obtain Source</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get sources"</span><span class="p">)</span>
-<span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="nv">$collectors</span><span class="p">.</span><span class="n">id</span>
+<span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Verbose</span>
 </pre></div>
 
 <p>Get First 4 Collectors source.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">4</span>
-
-<span class="c"># Obtain Source</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain Source</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get sources"</span><span class="p">)</span>
-<span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="nv">$collectors</span><span class="p">.</span><span class="n">id</span>
+<span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Verbose</span>
 </pre></div>
 
-<p>Asynchronouse execution will speed up.</p>
+<p>for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up for 2-10 times then synchronous call.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span>
-
-<span class="c"># Obtain Source</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get sources"</span><span class="p">)</span>
-<span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="nv">$collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Async</span>
+<div class="highlight highlight-PowerShell"><pre><span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronous request to get sources"</span><span class="p">)</span>
+<span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$collectors</span><span class="p">.</span><span class="n">id</span> <span class="n">-Async</span> <span class="n">-Verbose</span>
 </pre></div>
 
 <h3>
@@ -250,28 +277,37 @@ Where-Object or .Where({}) will ease you filtering object.</p>
 
 <p>You can set for each Source Type, will show in intellisence.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain Collectors</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="p">|</span> <span class="n">Select</span> <span class="n">-First</span> <span class="n">2</span>
+<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="p">|</span> <span class="n">Select</span> <span class="n">-First</span> <span class="n">2</span>
 
 <span class="c"># Set Sources</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to set sources"</span><span class="p">)</span>
-<span class="p">,(</span><span class="s2">"Log"</span><span class="p">,</span><span class="s2">"C:\logs\Log.log"</span><span class="p">,</span><span class="s2">"Log Description"</span><span class="p">)</span> <span class="p">|</span> <span class="p">%{</span><span class="nb">Set-SumoLogicApiCollectorSource</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">Id</span> <span class="n">-pathExpression</span> <span class="nv">$_</span><span class="p">[</span><span class="n">1</span><span class="p">]</span> <span class="n">-name</span> <span class="nv">$_</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="n">-sourceType</span> <span class="n">LocalFile</span> <span class="n">-category</span> <span class="nv">$_</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="n">-description</span> <span class="nv">$_</span><span class="p">[</span><span class="n">2</span><span class="p">]</span> <span class="n">-Credential</span> <span class="nv">$credential</span><span class="p">}</span>
+<span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Id</span>             <span class="p">=</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">Id</span>
+    <span class="n">pathExpression</span> <span class="p">=</span> <span class="s2">"C:\logs\Log.log"</span>
+    <span class="n">name</span>           <span class="p">=</span> <span class="s2">"Log"</span>
+    <span class="n">sourceType</span>     <span class="p">=</span> <span class="s2">"LocalFile"</span>
+    <span class="n">category</span>       <span class="p">=</span> <span class="s2">"Log Category"</span>
+    <span class="n">description</span>    <span class="p">=</span> <span class="s2">"Log Description"</span>
+<span class="p">}</span>
+<span class="nb">Set-PSSumoLogicApiCollectorSource</span> <span class="nv">@param</span> <span class="n">-Verbose</span>
 </pre></div>
 
-<p>Asynchronouse execution will speed up.</p>
+<p>for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up for 2-10 times then synchronous call.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span> <span class="p">|</span> <span class="n">Select</span> <span class="n">-First</span> <span class="n">2</span>
-
-<span class="c"># Set Sources</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request to set sources"</span><span class="p">)</span>
-<span class="p">,(</span><span class="s2">"Log"</span><span class="p">,</span><span class="s2">"C:\logs\Log.log"</span><span class="p">,</span><span class="s2">"Log Description"</span><span class="p">)</span> <span class="p">|</span> <span class="p">%{</span><span class="nb">Set-SumoLogicApiCollectorSource</span> <span class="n">-CollectorIds</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">Id</span> <span class="n">-pathExpression</span> <span class="nv">$_</span><span class="p">[</span><span class="n">1</span><span class="p">]</span> <span class="n">-name</span> <span class="nv">$_</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="n">-sourceType</span> <span class="n">LocalFile</span> <span class="n">-category</span> <span class="nv">$_</span><span class="p">[</span><span class="n">0</span><span class="p">]</span> <span class="n">-description</span> <span class="nv">$_</span><span class="p">[</span><span class="n">2</span><span class="p">]</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span><span class="p">}</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Set Sources</span>
+<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronous request to set sources"</span><span class="p">)</span>
+<span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Id</span>             <span class="p">=</span> <span class="nv">$Collectors</span><span class="p">.</span><span class="n">Id</span>
+    <span class="n">pathExpression</span> <span class="p">=</span> <span class="s2">"C:\logs\Log.log"</span>
+    <span class="n">name</span>           <span class="p">=</span> <span class="s2">"Log"</span>
+    <span class="n">sourceType</span>     <span class="p">=</span> <span class="s2">"LocalFile"</span>
+    <span class="n">category</span>       <span class="p">=</span> <span class="s2">"Log Category"</span>
+    <span class="n">description</span>    <span class="p">=</span> <span class="s2">"Log Description"</span>
+<span class="p">}</span>
+<span class="nb">Set-PSSumoLogicApiCollectorSource</span> <span class="nv">@param</span> <span class="n">-Async</span> <span class="n">-Verbose</span>
 </pre></div>
 
 <h3>
@@ -279,42 +315,33 @@ Where-Object or .Where({}) will ease you filtering object.</p>
 
 <p>You can set Remove for each Sources in Collectors.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># Obtain Collectors</span>
 <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get collectors"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span>
+<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span>
 
 <span class="c"># obtain Sources and remove it</span>
 <span class="nv">$collectors</span> <span class="p">`</span>
 <span class="p">|</span> <span class="p">%{</span>
     <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request to get sources"</span><span class="p">)</span>
-    <span class="nv">$souces</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span>
+    <span class="nv">$souces</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="p">|</span> <span class="n">where</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s2">"Log"</span>
 
     <span class="c"># Remove each souces in per Collectors</span>
     <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Synchronize request for each collectorId"</span><span class="p">)</span>
-    <span class="nb">Remove-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorIds</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-SourceIds</span> <span class="nv">$souces</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span><span class="p">}</span>
+    <span class="nb">Remove-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-Id</span> <span class="nv">$souces</span><span class="p">.</span><span class="n">id</span><span class="p">}</span>
 </pre></div>
 
-<p>Asynchronouse execution will speed up.</p>
+<p>for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up for 2-10 times then synchronous call.</p>
 
-<div class="highlight highlight-PowerShell"><pre><span class="c"># Get Credential</span>
-<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCredential</span>
-
-<span class="c"># Obtain Collectors</span>
-<span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request"</span><span class="p">)</span>
-<span class="nv">$collectors</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollector</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span> <span class="p">|</span> <span class="n">select</span> <span class="n">-First</span> <span class="n">5</span>
-
-<span class="c"># obtain Sources and remove it</span>
+<div class="highlight highlight-PowerShell"><pre><span class="c"># obtain Sources and remove it</span>
 <span class="nv">$collectors</span> <span class="p">`</span>
 <span class="p">|</span> <span class="p">%{</span>
-    <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request to get sources"</span><span class="p">)</span>
-    <span class="nv">$souces</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-CollectorIds</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-Async</span>
+    <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronous request to get sources"</span><span class="p">)</span>
+    <span class="nv">$souces</span> <span class="p">=</span> <span class="nb">Get-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-Async</span>
 
     <span class="c"># Remove each souces in per Collectors</span>
-    <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronize request for each collectorId"</span><span class="p">)</span>
-    <span class="nb">Remove-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorIds</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-SourceIds</span> <span class="nv">$souces</span><span class="p">.</span><span class="n">id</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-Async</span><span class="p">}</span>
+    <span class="nv">$host</span><span class="p">.</span><span class="n">Ui</span><span class="p">.</span><span class="n">WriteVerboseLine</span><span class="p">(</span><span class="s2">"Running Asynchronous request for each collectorId"</span><span class="p">)</span>
+    <span class="nb">Remove-PSSumoLogicApiCollectorSource</span> <span class="n">-CollectorId</span> <span class="nv">$_</span><span class="p">.</span><span class="n">id</span> <span class="n">-Id</span> <span class="nv">$souces</span><span class="p">.</span><span class="n">id</span> <span class="n">-Async</span><span class="p">}</span>
 </pre></div>
       </section>
     </div>
