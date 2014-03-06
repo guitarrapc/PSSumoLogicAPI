@@ -25,23 +25,30 @@ Get-Command -Module PSSumoLogicApi
 
 Here's Cmdlets use in public
 
-```text
-CommandType Name                                 ModuleName    
------------ ----                                 ----------    
-Function    Get-PSSumoLogicApiCollector          PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCollectorSource    PSSumoLogicAPI
-Function    Get-PSSumoLogicApiCredential         PSSumoLogicAPI
-Function    New-PSSumoLogicApiCredential         PSSumoLogicAPI
-Function    Remove-PSSumoLogicApiCollector       PSSumoLogicAPI
-Function    Remove-PSSumoLogicApiCollectorSource PSSumoLogicAPI
-Function    Set-PSSumoLogicApiCollectorSource    PSSumoLogicAPI
-```
+|CommandType|Name|ModuleName|
+|----|----|----|
+|Function|    Get-PSSumoLogicApiCollector          |PSSumoLogicApi|
+|Function|    Get-PSSumoLogicApiCollectorSource    |PSSumoLogicApi|
+|Function|    Get-PSSumoLogicApiCredential         |PSSumoLogicApi|
+|Function|    Get-PSSumoLogicApiWebSession         |PSSumoLogicApi|
+|Function|    New-PSSumoLogicApiCredential         |PSSumoLogicApi|
+|Function|    Remove-PSSumoLogicApiCollector       |PSSumoLogicApi|
+|Function|    Remove-PSSumoLogicApiCollectorSource |PSSumoLogicApi|
+|Function|    Set-PSSumoLogicApiCollectorSource    |PSSumoLogicApi|
+
 
 # Test
 
 You can find sample source in [Test](https://github.com/guitarrapc/PSSumoLogicAPI/tree/master/PSSumoLogicAPI/Test)
 
 ## Credential
+
+Make sure SumoLogicAPI requires credential authentication for only first session.
+You will retrieve authenticated cookies when sending any API request with UserName/Password.
+Use this authenticated cookies as WebSession then you do not need to pass credential afterward.
+
+Make sure there is API limitation to try call API with credential, to retrieve websession/cookies.
+If you call API for continuous 15 times, then you will be rejected from API for 60 sec.
 
 ### Create Credential secure Password File
 
@@ -89,83 +96,81 @@ you can reuse Credential.
 $credential = Get-PSSumoLogicApiCredential
 ```
 
+## Web Session
+
+Before starting call SumoLogic API, set authenticated websessions to $PSSumoLogicAPI.Websession module variable.
+After set this session, you can ignore any credential/session when call API.
+
+### Set Authenticated cookies to $PSSumoLogicAPI.Websession
+
+Get crednetial when obtain Websession.
+
+```PowerShell
+# Get Credential
+$credential = Get-PSSumoLogicApiCredential
+```
+
+Then call SumoLogic API to get Web Session. If you add -PassThru switch, then retrived value will show in host.
+
+```PowerShell
+# Obtain Session Variables
+$host.Ui.WriteVerboseLine("Get Sessionvariables and PassThru")
+Get-PSSumoLogicApiWebSession -PassThru
+```
+
+Web Session value in contains in Module variable $PSSumoLogicAPI.WebSession.
+
+```Powershell
+$host.Ui.WriteVerboseLine("Output whether session contains in PSSumoLogicAPI variable.")
+$PSSumoLogicAPI.WebSession
+```
 
 ## Collector
 
 ### Get SumoLogic Collectors of your account
 
-```PowerShell
-Get-PSSumoLogicApiCollectors -Credential $credential
-```
-
-You can reuse collectors.
+Now you can call SumoLogicAPI.
 
 ```PowerShell
-$Collectors = Get-PSSumoLogicApiCollectors -Credential $credential
+$Collectors = Get-PSSumoLogicApiCollectors
+$Collectors
 ```
 
 specify collector ids.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential
-
 # Obtain each Collectors for first 5
 $host.Ui.WriteVerboseLine("Running Synchronize request for each collectorId")
-Get-PSSumoLogicApiCollector -Credential $credential -Id ($collectors.Id | select -First 5)
+Get-PSSumoLogicApiCollector -Id ($collectors.Id | select -First 5)
 ```
 
 for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async
-
 # Obtain each Collectors for first 5
-$host.Ui.WriteVerboseLine("Running Asynchronize request for each CollectorId")
-Get-PSSumoLogicApiCollector -Credential $credential -Id ($collectors.Id | select -First 5) -Async
+$host.Ui.WriteVerboseLine("Running Asynchronous request for each CollectorId")
+Get-PSSumoLogicApiCollector -Id ($collectors.Id | select -First 5) -Async -Verbose
 ```
 
-it will speed up about x5 then not using switch.
+It will speed up about 2-10 times then synchronous each collector id calls.
 
 ### Remove Collectors
 
 Specify Collector id to remove collectors.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential | select -First 5
-
 # Remove each Collectors
 $host.Ui.WriteVerboseLine("Running Synchronize request for each collectorId to remove collectors")
-Remove-PSSumoLogicApiCollector -Id $Collectors.id -Credential $credential
+Remove-PSSumoLogicApiCollector -Id $Collectors.id
 ```
 
+for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
 Asynchronouse execution will speed up.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async | select -First 5
-
 # Obtain each Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request for each collectorId to remove collectors")
-Remove-PSSumoLogicApiCollector -Id $Collectors.id -Credential $credential -Async
+$host.Ui.WriteVerboseLine("Running Asynchronous request for each collectorId to remove collectors")
+Remove-PSSumoLogicApiCollector -Id $Collectors.id -Async
 ```
 
 It may good to filter Collector name, OS or status to select which collector to delete.
@@ -173,61 +178,34 @@ Where-Object or .Where({}) will ease you filtering object.
 
 ## Source
 
-### Get SumoLogic Source for Collectors of your account
+### Get Collector Source
 
 Get all collectors source.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
 # Obtain Collectors
 $host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential
+$collectors = Get-PSSumoLogicApiCollector
 
 # Obtain Source
 $host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $collectors.id
+Get-PSSumoLogicApiCollectorSource -CollectorId $collectors.id -Verbose
 ```
 
 Get First 4 Collectors source.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential | select -First 4
-
 # Obtain Source
 $host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $collectors.id
+Get-PSSumoLogicApiCollectorSource -CollectorId $collectors.id -Verbose
 ```
 
-Asynchronouse execution will speed up.
+for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up for 2-10 times then synchronous call.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async
-
-# Obtain Source
-$host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $collectors.id -Async
-```
-You can specify Source Ids if you know.
-
-```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Source
-$host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId 111111 -Id 123 -Async
+$host.Ui.WriteVerboseLine("Running Asynchronous request to get sources")
+Get-PSSumoLogicApiCollectorSource -CollectorId $collectors.id -Async -Verbose
 ```
 
 ### Set SumoLogic Source for Collectors of your account
@@ -235,29 +213,38 @@ Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId 111111 -I
 You can set for each Source Type, will show in intellisence.
 
 ```PowerShell
-$credential = Get-PSSumoLogicApiCredential
-
 # Obtain Collectors
 $host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential | Select -First 2
+$collectors = Get-PSSumoLogicApiCollector | Select -First 2
 
 # Set Sources
 $host.Ui.WriteVerboseLine("Running Synchronize request to set sources")
-,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -CollectorId $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential}
+$param = @{
+    Id             = $Collectors.Id
+    pathExpression = "C:\logs\Log.log"
+    name           = "Log"
+    sourceType     = "LocalFile"
+    category       = "Log Category"
+    description    = "Log Description"
+}
+Set-PSSumoLogicApiCollectorSource @param -Verbose
 ```
 
-Asynchronouse execution will speed up.
+for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up for 2-10 times then synchronous call.
 
 ```PowerShell
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async | Select -First 2
-
 # Set Sources
-$host.Ui.WriteVerboseLine("Running Asynchronize request to set sources")
-,("Log","C:\logs\Log.log","Log Description") | %{Set-SumoLogicApiCollectorSource -CollectorId $Collectors.Id -pathExpression $_[1] -name $_[0] -sourceType LocalFile -category $_[0] -description $_[2] -Credential $credential -Async}
+$host.Ui.WriteVerboseLine("Running Asynchronous request to set sources")
+$param = @{
+    Id             = $Collectors.Id
+    pathExpression = "C:\logs\Log.log"
+    name           = "Log"
+    sourceType     = "LocalFile"
+    category       = "Log Category"
+    description    = "Log Description"
+}
+Set-PSSumoLogicApiCollectorSource @param -Async -Verbose
 ```
 
 ### Remove Source
@@ -265,41 +252,32 @@ $host.Ui.WriteVerboseLine("Running Asynchronize request to set sources")
 You can set Remove for each Sources in Collectors.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
 # Obtain Collectors
 $host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential | select -First 5
+$collectors = Get-PSSumoLogicApiCollector | select -First 5
 
 # obtain Sources and remove it
 $collectors `
 | %{
     $host.Ui.WriteVerboseLine("Running Synchronize request to get sources")
-    $souces = Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $_.id
+    $souces = Get-PSSumoLogicApiCollectorSource -CollectorId $_.id | where Name -eq "Log"
 
     # Remove each souces in per Collectors
     $host.Ui.WriteVerboseLine("Running Synchronize request for each collectorId")
-    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id -Credential $credential}
+    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id}
 ```
 
-Asynchronouse execution will speed up.
+for multiple collectorIds, you can use -Async switch to invoke command asynchronous.
+Asynchronouse execution will speed up for 2-10 times then synchronous call.
 
 ```PowerShell
-# Get Credential
-$credential = Get-PSSumoLogicApiCredential
-
-# Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request")
-$collectors = Get-PSSumoLogicApiCollector -Credential $credential -Async | select -First 5
-
 # obtain Sources and remove it
 $collectors `
 | %{
-    $host.Ui.WriteVerboseLine("Running Asynchronize request to get sources")
-    $souces = Get-PSSumoLogicApiCollectorSource -Credential $credential -CollectorId $_.id -Async
+    $host.Ui.WriteVerboseLine("Running Asynchronous request to get sources")
+    $souces = Get-PSSumoLogicApiCollectorSource -CollectorId $_.id -Async
 
     # Remove each souces in per Collectors
-    $host.Ui.WriteVerboseLine("Running Asynchronize request for each collectorId")
-    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id -Credential $credential -Async}
+    $host.Ui.WriteVerboseLine("Running Asynchronous request for each collectorId")
+    Remove-PSSumoLogicApiCollectorSource -CollectorId $_.id -Id $souces.id -Async}
 ```
