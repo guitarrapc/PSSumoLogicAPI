@@ -5,9 +5,9 @@ $credential = Get-PSSumoLogicApiCredential
 Get-PSSumoLogicApiWebSession -Credential $credential
 
 # Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request")
-$collectors = Get-PSSumoLogicApiCollector -Async | select -First 5
+$host.Ui.WriteVerboseLine("Running Synchronize request")
+$collectors = Get-PSSumoLogicApiCollector | select -First 5
 
 # Obtain each Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request for each collectorId to remove collectors")
+$host.Ui.WriteVerboseLine("Running Asynchronous request for each collectorId to remove collectors")
 Remove-PSSumoLogicApiCollector -Id $Collectors.id -Async

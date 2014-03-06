@@ -5,11 +5,11 @@ $credential = Get-PSSumoLogicApiCredential
 Get-PSSumoLogicApiWebSession -Credential $credential
 
 # Obtain Collectors
-$host.Ui.WriteVerboseLine("Running Asynchronize request to get collectors")
+$host.Ui.WriteVerboseLine("Running Synchronize request to get collectors")
 $collectors = Get-PSSumoLogicApiCollector | Select -First 2
 
 # Set Sources
-$host.Ui.WriteVerboseLine("Running Synchronize request to set sources")
+$host.Ui.WriteVerboseLine("Running Asynchronous request to set sources")
 $param = @{
     Id             = $Collectors.Id
     pathExpression = "C:\logs\Log.log"
