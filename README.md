@@ -52,6 +52,8 @@ If you call API for continuous 15 times, then you will be rejected from API for 
 
 ### Create Credential secure Password File
 
+The Credential will be save in Windows Credential Manager as Generic, Name with PSSumoLogicAPI.
+
 ```PowerShell
 New-PSSumoLogicApiCredential -user hoge@hoge.com
 ```
@@ -76,15 +78,11 @@ New-PSSumoLogicApiCredential
 ```
 
 
-### Get Credential secure Password from file
+### Get Credential secure Password from Windows Credential Manager
 
-Onece you create credential, you can get it easily.
+Once you create credential, you can get it easily.
 
-```PowerShell
-Get-PSSumoLogicApiCredential -user hoge@hoge.com
-```
-
-you can omit username if you configure ```.\PSSumoLogicAPI\config\PSSumoLogicAPI-config.ps1```
+This checking Credential Manager for the name with PSSumoLogicAPI. 
 
 ```PowerShell
 Get-PSSumoLogicApiCredential
