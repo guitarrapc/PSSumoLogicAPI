@@ -179,6 +179,16 @@ Add-Type -TypeDefinition @"
     }
 "@
 
+#-- Enum for CredRead/Write Type --#
+Add-Type -TypeDefinition @"
+    public enum WindowsCredentialManagerType
+    {
+        Generic           = 1,
+        DomainPassword    = 2,
+        DomainCertificate = 3
+    }
+"@
+
 #-- Private Loading Module Parameters --#
 
 # contains default base configuration, may not be override without version update.
@@ -186,8 +196,8 @@ $Script:PSSumoLogicAPI                        = @{}
 $PSSumoLogicAPI.name                          = "PSSumoLogicAPI"                                         # contains the Name of Module
 $PSSumoLogicAPI.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
 $PSSumoLogicAPI.helpersPath                   = "\functions\*.ps1"                                       # path of functions
-$PSSumoLogicAPI.credentialPath                = "\save"                                                  # path of credential
 $PSSumoLogicAPI.defaultconfigurationfile      = "\config\PSSumoLogicAPI-config.ps1"                      # default configuration file name within PSSumoLogicAPI.psm1
+$PSSumoLogicAPI.cSharpPath                    = "\cs\"
 $PSSumoLogicAPI.context                       = New-Object System.Collections.Stack                      # holds onto the current state of all variables
 
 $PSSumoLogicAPI.originalErrorActionPreference = $ErrorActionPreference

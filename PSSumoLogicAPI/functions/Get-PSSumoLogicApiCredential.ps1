@@ -7,43 +7,51 @@ function Get-PSSumoLogicApiCredential
     [CmdletBinding()]
     param
     (
-        [string]
         [Parameter(
-            Position = 0,
-            Mandatory = 0)]
+            mandatory = 0,
+            position = 0)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $path = (Join-Path $PSSumoLogicAPI.modulePath $PSSumoLogicAPI.credentialPath),
+        $TargetName = $PSSumoLogicAPI.name,
 
         [Parameter(
-            Position = 1,
-            Mandatory = 0)]
+            mandatory = 0,
+            position = 1)]
         [ValidateNotNullOrEmpty()]
-        [string]
-        $User = $PSSumoLogicAPI.credential.user
+        [WindowsCredentialManagerType]
+        $Type = [WindowsCredentialManagerType]::Generic
     )
+ 
+    $script:ErrorActionPreference = $PSSumoLogicAPI.errorPreference
 
-    $ErrorActionPreference = $PSSumoLogicApi.errorPreference
+    $script:CSPath = Join-Path $PSSumoLogicAPI.modulePath $PSSumoLogicAPI.cSharpPath -Resolve
+    $script:CredReadCS = Join-Path $CSPath CredRead.cs -Resolve
+    $script:sig = Get-Content -Path $CredReadCS -Raw
 
-    # Set CredPath with current Username
-    $credPath = Join-Path $path $User -Resolve
-
-    try
-    {
-        $credPassword = Get-Content -Path $CredPath | ConvertTo-SecureString
-
-        Write-Verbose ("Overwrite credential for User '{0}' from '{1}'" -f $User, $CredPath)
-        $cred = New-Object System.Management.Automation.PSCredential ($user, $Credpassword)
-        return $cred
+    $script:addType = @{
+        MemberDefinition = $sig
+        Namespace        = "Advapi32"
+        Name             = "Util"
     }
-    catch [System.Management.Automation.ActionPreferenceStopException]
+    Add-PSSumoLogicApiTypeMemberDefinition @addType -PassThru `
+    | select -First 1 `
+    | %{
+        $script:typeQualifiedName = $_.AssemblyQualifiedName
+        $script:typeFullName = $_.FullName
+    }
+
+    $script:nCredPtr= New-Object IntPtr
+    if ([System.Type]::GetType($typeQualifiedName)::CredRead($TargetName, $Type.value__, 0, [ref]$nCredPtr))
     {
-        switch ($_.Exception)
-        {
-            [System.Management.Automation.ItemNotFoundException]     {throw $_.Exception}
-            [System.Management.Automation.ParameterBindingException] {throw $_.Exception}
-            [System.Security.Cryptography.CryptographicException]    {throw $_.Exception}
-            default                                                  {throw $_}
-        }
+        $script:critCred = New-Object $typeFullName+CriticalCredentialHandle $nCredPtr
+        $script:cred = $critCred.GetCredential()
+        $script:username = $cred.UserName
+        $script:securePassword = $cred.CredentialBlob | ConvertTo-SecureString -AsPlainText -Force
+        $cred = $null
+        return New-Object System.Management.Automation.PSCredential $username, $securePassword
+    }
+    else
+    {
+        Write-Verbose ("No credentials found in Windows Credential Manager for TargetName: '{0}' with Type '{1}'" -f $TargetName, $Type)
     }
 }
