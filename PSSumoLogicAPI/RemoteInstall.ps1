@@ -314,7 +314,7 @@ function Remove-Directory
 # To run this function paste below in PowerShell or Command Prompt(cmd)
 
 # 1. x not prefered : raw.github.com
-# powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/valentia/master/PSSumoLogicAPI/RemoteInstall.ps1'))"
+# powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.github.com/guitarrapc/PSSumoLogicAPI/master/PSSumoLogicAPI/RemoteInstall.ps1'))"
 
 # 2. o prefered : api.github.com
-# powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/valentia/contents/PSSumoLogicAPI/RemoteInstall.ps1").Content))).Remove(0,1)'
+# powershell -NoProfile -ExecutionPolicy unrestricted -Command 'iex ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((irm "https://api.github.com/repos/guitarrapc/PSSumoLogicAPI/contents/PSSumoLogicAPI/RemoteInstall.ps1").Content))).Remove(0,1)'
