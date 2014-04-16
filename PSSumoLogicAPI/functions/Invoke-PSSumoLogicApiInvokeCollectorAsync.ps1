@@ -56,7 +56,7 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
         foreach ($Collector in $CollectorId)
         {
             # Verbose settings for Async Command inside
-            if ($PSBoundParameters.Verbose.IsPresent)
+            if ($PSBoundParameters.ContainsKey("Verbose"))
             {
                 $private:verbose = "continue"
             }
