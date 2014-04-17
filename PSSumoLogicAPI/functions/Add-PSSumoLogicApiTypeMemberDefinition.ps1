@@ -39,7 +39,7 @@ function Add-PSSumoLogicApiTypeMemberDefinition
     }
 
     $script:result = Add-Type @addType -PassThru
-    if ($PSBoundParameters.PassThru.IsPresent)
+    if ($PSBoundParameters.ContainsKey("PassThru"))
     {
         return $result
     }

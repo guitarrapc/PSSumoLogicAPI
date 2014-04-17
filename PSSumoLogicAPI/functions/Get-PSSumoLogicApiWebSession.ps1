@@ -32,7 +32,7 @@ function Get-PSSumoLogicApiWebSession
         Invoke-RestMethod -Uri $uri -Method Get -Credential $Credential -SessionVariable SessionVariable > $null
         $PSSumoLogicAPI.WebSession = $SessionVariable
 
-        if ($PSBoundParameters.PassThru.IsPresent)
+        if ($PSBoundParameters.ContainsKey("PassThru"))
         {
             $SessionVariable
         }

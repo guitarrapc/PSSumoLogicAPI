@@ -48,7 +48,7 @@ function Remove-PSSumoLogicApiCollector
     {
         try
         {
-            if ($PSBoundParameters.Async.IsPresent)
+            if ($PSBoundParameters.ContainsKey("Async"))
             {
                 Write-Verbose "Running Async execution"
                 $command = {

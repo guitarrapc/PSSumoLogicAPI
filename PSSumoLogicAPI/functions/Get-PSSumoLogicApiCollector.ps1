@@ -54,7 +54,7 @@ function Get-PSSumoLogicApiCollector
             }
             else
             {
-                if ($PSBoundParameters.Async.IsPresent)
+                if ($PSBoundParameters.ContainsKey("Async"))
                 {
                     Write-Verbose "Running Async execution"
                     $command = {
