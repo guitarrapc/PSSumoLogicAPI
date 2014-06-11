@@ -67,6 +67,7 @@
     <Compile Include="functions\Invoke-PSSumoLogicApiInvokeCollectorAsync.ps1" />
     <Compile Include="functions\Invoke-PSSumoLogicApiInvokeCollectorSourceAsync.ps1" />
     <Compile Include="functions\Set-PSSumoLogicApiCollectorSource.ps1" />
+    <Compile Include="functions\Update-PSSumoLogicApiCollectorSource.ps1" />
     <Compile Include="functions\Test-PSSumoLogicApiCollectorAsyncStatusCompleted.ps1" />
     <Compile Include="PSSumoLogicAPI.psd1" />
     <Compile Include="Test\Test-GetSumoApiWebSession.ps1" />
