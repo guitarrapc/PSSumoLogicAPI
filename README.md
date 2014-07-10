@@ -35,6 +35,7 @@ Here's Cmdlets use in public
 |Function|    Remove-PSSumoLogicApiCollector       |PSSumoLogicApi|
 |Function|    Remove-PSSumoLogicApiCollectorSource |PSSumoLogicApi|
 |Function|    Set-PSSumoLogicApiCollectorSource    |PSSumoLogicApi|
+|Function|    Update-PSSumoLogicApiCollectorSource |PSSumoLogicApi|
 
 
 # Test
