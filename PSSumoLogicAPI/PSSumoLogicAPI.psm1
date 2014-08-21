@@ -34,22 +34,19 @@ function Import-PSSumoLogicAPIConfiguration
     param
     (
         [string]
-        $configdir = $PSSumoLogicAPI.modulePath
+        $PSSumoLogicApiConfigFilePath = (Join-Path $PSSumoLogicApi.defaultconfiguration.dir $PSSumoLogicApi.defaultconfiguration.file)
     )
 
-    $ErrorActionPreference = $PSSumoLogicAPI.errorPreference
-
-    $PSSumoLogicAPIConfigFilePath = (Join-Path $configdir $PSSumoLogicAPI.defaultconfigurationfile)
-
-    if (Test-Path $PSSumoLogicAPIConfigFilePath -pathType Leaf) 
+    if (Test-Path $PSSumoLogicApiConfigFilePath -pathType Leaf) 
     {
         try 
-        {
-            . $PSSumoLogicAPIConfigFilePath
+        {        
+            Write-Verbose "Load Current Configuration or Default."
+            . $PSSumoLogicApiConfigFilePath
         } 
         catch 
         {
-            throw ("Error Loading Configuration from {0}: " -f $PSSumoLogicAPI.defaultconfigurationfile) + $_
+            throw ('Error Loading Configuration from {0}: ' -f $PSSumoLogicApi.defaultconfiguration.file) + $_
         }
     }
 }
@@ -196,7 +193,6 @@ $Script:PSSumoLogicAPI                        = @{}
 $PSSumoLogicAPI.name                          = "PSSumoLogicAPI"                                         # contains the Name of Module
 $PSSumoLogicAPI.modulePath                    = Split-Path -parent $MyInvocation.MyCommand.Definition
 $PSSumoLogicAPI.helpersPath                   = "\functions\*.ps1"                                       # path of functions
-$PSSumoLogicAPI.defaultconfigurationfile      = "\config\PSSumoLogicAPI-config.ps1"                      # default configuration file name within PSSumoLogicAPI.psm1
 $PSSumoLogicAPI.cSharpPath                    = "\cs\"
 $PSSumoLogicAPI.context                       = New-Object System.Collections.Stack                      # holds onto the current state of all variables
 
@@ -207,6 +203,11 @@ $PSSumoLogicAPI.debugPreference               = "SilentlyContinue"
 
 #-- Fixed parameters for SumoLogic Service --#
 
+# config
+$PSSumoLogicAPI.defaultconfiguration = @{
+    dir       = Join-Path $PSSumoLogicAPI.modulePath "\config"
+    file      = "PSSumoLogicAPI-config.ps1"                      # default configuration file name within PSSumoLogicAPI.psm1
+}
 # content type
 $PSSumoLogicAPI.contentType        = "application/json"
 

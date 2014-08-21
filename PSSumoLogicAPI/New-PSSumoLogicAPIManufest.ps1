@@ -6,15 +6,22 @@ $script:RequiredModules = @()
 $script:clrVersion = "4.0.0.0" # .NET 4.0 with StandAlone Installer "4.0.30319.1008" or "4.0.30319.1" , "4.0.30319.17929" (Win8/2012)
 
 $script:functionToExport = @(
+    # Collector
     "Get-PSSumoLogicApiCollector",
-    "Get-PSSumoLogicApiCollectorSource",
-    "Get-PSSumoLogicApiCredential",
-    "Get-PSSumoLogicApiWebSession",
-    "New-PSSumoLogicApiCredential",
     "Remove-PSSumoLogicApiCollector",
+    # Config
+    "Edit-PSSumoLogicAPIConfig",
+    "Show-PSSumoLogicAPIConfig",
+    # Credential
+    "Get-PSSumoLogicApiCredential",
+    "New-PSSumoLogicApiCredential",
+    # Source
+    "Get-PSSumoLogicApiCollectorSource",
     "Remove-PSSumoLogicApiCollectorSource",
     "Set-PSSumoLogicApiCollectorSource",
-    "Update-PSSumoLogicApiCollectorSource"
+    "Update-PSSumoLogicApiCollectorSource",
+    # WebSession
+    "Get-PSSumoLogicApiWebSession"
 )
 
 $script:variableToExport = "PSSumoLogicAPI"

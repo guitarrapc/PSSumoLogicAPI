@@ -31,6 +31,8 @@
     <Content Include="config\PSSumoLogicAPI-config.ps1" />
     <Content Include="cs\CredRead.cs" />
     <Content Include="cs\CredWrite.cs" />
+    <Content Include="functions\Config\Edit-PSSumoLogicAPIConfig.ps1" />
+    <Content Include="functions\Config\Show-PSSumoLogicAPIConfig.ps1" />
     <Content Include="install.bat" />
     <Content Include="install.ps1" />
     <Content Include="New-PSSumoLogicAPIManufest.ps1" />
@@ -52,6 +54,7 @@
     <Folder Include="cs\" />
     <Folder Include="functions\" />
     <Folder Include="functions\Collector\" />
+    <Folder Include="functions\Config\" />
     <Folder Include="functions\Credential\" />
     <Folder Include="functions\Helper\" />
     <Folder Include="functions\Helper\Private\" />
