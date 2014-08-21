@@ -45,6 +45,12 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
         $name = "",
 
         [parameter(
+            position = 1,
+            mandatory = 0)]
+        [int[]]
+        $SourceId,
+
+        [parameter(
             position = 6,
             mandatory = 0)]
         [hashtable]
@@ -90,15 +96,19 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             }
             elseif (($sourceExpression | measure).Count -ne 0)
             {
-                Write-Verbose "Put json body"
-                $private:powershell = [PowerShell]::Create().
-                    AddScript($command).
-                    AddArgument($Collector).
-                    AddArgument($PSSumoLogicApi).
-                    AddArgument($webSession).
-                    AddArgument($timeoutSec).
-                    AddArgument($sourceExpression).
-                    AddArgument($verbose)
+                foreach ($source in $SourceId)
+                {
+                    Write-Verbose "Put json body"
+                    $private:powershell = [PowerShell]::Create().
+                        AddScript($command).
+                        AddArgument($Collector).
+                        AddArgument($Source).
+                        AddArgument($PSSumoLogicApi).
+                        AddArgument($webSession).
+                        AddArgument($timeoutSec).
+                        AddArgument($sourceExpression).
+                        AddArgument($verbose)
+                }
             }
             else
             {
