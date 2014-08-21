@@ -27,13 +27,13 @@ function Invoke-PSSumoLogicApiInvokeCollectorSourceAsync
         $SourceId,
 
         [parameter(
-            position = 3,
+            position = 4,
             mandatory = 1)]
         [Microsoft.PowerShell.Commands.WebRequestSession]
         $WebSession,
 
         [parameter(
-            position = 4,
+            position = 5,
             mandatory = 1)]
         [int]
         $timeoutSec

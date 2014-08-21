@@ -259,9 +259,10 @@ $PSSumoLogicAPI.WebSession   = [Microsoft.PowerShell.Commands.WebRequestSession]
 }
 
 # -- Export Modules when loading this module -- #
-Resolve-Path (Join-Path $PSSumoLogicAPI.modulePath $PSSumoLogicAPI.helpersPath) | 
-    where { -not ($_.ProviderPath.Contains(".Tests.")) } |
-    % { . $_.ProviderPath }
+Get-ChildItem -Path (Join-Path $PSSumoLogicAPI.modulePath $PSSumoLogicAPI.helpersPath) -Recurse `
+| where { -not ($_.FullName.Contains('.Tests.')) } `
+| where Extension -eq '.ps1' `
+| % {. $_.FullName}
 
 # -- Import Default configuration file -- #
 Import-PSSumoLogicAPIConfiguration

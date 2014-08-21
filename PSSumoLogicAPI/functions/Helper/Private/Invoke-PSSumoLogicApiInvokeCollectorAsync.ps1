@@ -42,7 +42,13 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
             position = 5,
             mandatory = 0)]
         [string]
-        $name = ""
+        $name = "",
+
+        [parameter(
+            position = 6,
+            mandatory = 0)]
+        [hashtable]
+        $sourceExpression = $null
     )
 
     $ErrorActionPreference = $PSSumoLogicAPI.errorPreference 
@@ -79,6 +85,19 @@ function Invoke-PSSumoLogicApiInvokeCollectorAsync
                     AddArgument($webSession).
                     AddArgument($timeoutSec).
                     AddArgument($JsonBody).
+                    AddArgument($verbose).
+                    AddArgument($name)
+            }
+            elseif (($sourceExpression | measure).Count -ne 0)
+            {
+                Write-Verbose "Put json body"
+                $private:powershell = [PowerShell]::Create().
+                    AddScript($command).
+                    AddArgument($Collector).
+                    AddArgument($PSSumoLogicApi).
+                    AddArgument($webSession).
+                    AddArgument($timeoutSec).
+                    AddArgument($sourceExpression).
                     AddArgument($verbose)
             }
             else

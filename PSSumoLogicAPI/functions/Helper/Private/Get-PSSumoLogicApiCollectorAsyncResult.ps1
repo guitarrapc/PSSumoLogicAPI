@@ -22,10 +22,10 @@ function Get-PSSumoLogicApiCollectorAsyncResult
     Write-Debug "obtain process result"
     foreach ($runspace in $runspaceCollection)
     {
-        # obtain Asynchronos command result
+        # obtain Asynchronous command result
         $private:task = $runspace.powershell.EndInvoke($runspace.Runspace)
-
-        $property = ($task | Get-Member -MemberType NoteProperty).Name
+        
+        $property = if ((($task |measure).count -ne 0)){ ($task | Get-Member -MemberType NoteProperty).Name}
             
         # show result
         $task.$property
